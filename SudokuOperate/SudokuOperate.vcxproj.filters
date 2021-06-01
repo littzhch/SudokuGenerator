@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sudoku.c">
+    <ClCompile Include="sudokuoperate.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sudoku.h">
+    <ClInclude Include="SudokuOperate.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

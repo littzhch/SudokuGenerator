@@ -141,7 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.c" />
+    <ClCompile Include="sudoku.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sudoku.h" />

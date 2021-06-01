@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e7f6aad2-8ac9-4e1f-b99b-ef10010cbbae}</ProjectGuid>
-    <RootNamespace>SudokuGeneratorTUI</RootNamespace>
+    <ProjectGuid>{7f015113-5079-45c0-8a2e-5dcc8ac9cd46}</ProjectGuid>
+    <RootNamespace>SudokuOperate</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -78,6 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+    <AllProjectBMIsArePublic>true</AllProjectBMIsArePublic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -139,15 +141,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SudokuOperate\SudokuOperate.vcxproj">
-      <Project>{7f015113-5079-45c0-8a2e-5dcc8ac9cd46}</Project>
-    </ProjectReference>
+    <ClCompile Include="sudokuoperate.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SudokuOperate.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\sudoku\sudoku.vcxproj">
       <Project>{6fcfcdc8-517e-4705-9180-f0b77e2d6db1}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
