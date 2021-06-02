@@ -19,7 +19,7 @@ void UpdateNumber(PSUDOKU pSudoku, UINT8 num, int index) {
 
 
 SUDOKU_API UINT16 GetValidNumber(PSUDOKU pSudoku, int index) {
-	UINT16 result = 0xffff;
+	UINT16 result = 0b0000001111111110;
 	int row = index / 9 + 1;
 	int col = index % 9 + 1;
 	int blockCenterRow = ((row - 1) / 3) * 3 + 2;

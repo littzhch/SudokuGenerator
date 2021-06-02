@@ -4,10 +4,15 @@
 int main(void) {
 	SUDOKU sudoku;
 	SuInitialize(&sudoku);
-	UpdateNumber(&sudoku, 2, Position(1, 1));
-	UpdateNumber(&sudoku, 9, Position(3, 3));
-	UpdateNumber(&sudoku, 3, Position(8, 2));
-	UpdateNumber(&sudoku, 5, Position(1, 7));
+	UpdateNumber(&sudoku, 1, Position(1, 1));
+	UpdateNumber(&sudoku, 2, Position(1, 3));
+	UpdateNumber(&sudoku, 3, Position(2, 1));
+	UpdateNumber(&sudoku, 4, Position(2, 2));
+	UpdateNumber(&sudoku, 5, Position(2, 3));
+	UpdateNumber(&sudoku, 6, Position(3, 1));
+	UpdateNumber(&sudoku, 7, Position(3, 2));
+	UpdateNumber(&sudoku, 8, Position(3, 3));
+	UpdateNumber(&sudoku, 9, Position(1, 4));
 	int a = sudoku.elements[6];
 	UINT16 rst;
 	rst = GetValidNumber(&sudoku, Position(1, 2));
@@ -20,4 +25,5 @@ int main(void) {
 	printf("7 -%d\n", IsValid(rst, 7));
 	printf("8 -%d\n", IsValid(rst, 8));
 	printf("9 -%d\n", IsValid(rst, 9));
+	printf("%d\n", rst);
 }
