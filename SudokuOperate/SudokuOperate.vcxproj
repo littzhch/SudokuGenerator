@@ -143,7 +143,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="sudokuoperate.c" />
+    <ClCompile Include="sudokugenerate.c" />
+    <ClCompile Include="sudokusolve.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SudokuOperate.h" />

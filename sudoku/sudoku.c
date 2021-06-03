@@ -48,4 +48,5 @@ void PrintSudoku(PSUDOKU pSudoku) {
 		}
 		puts("");
 	}
+	puts("");
 }

@@ -15,7 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sudokuoperate.c">
+    <ClCompile Include="sudokugenerate.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sudokusolve.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

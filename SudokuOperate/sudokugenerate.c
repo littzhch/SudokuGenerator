@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 #include "SudokuOperate.h"
 
 
@@ -14,7 +13,7 @@ static int SolveCell(PSUDOKU pSudoku, int * zeroIdxs, int arrMax, int currentPos
 
 
 void GenerateSudoku(PSUDOKU pProblem, PSUDOKU pAnswer, int clueNum) {
-	//srand(GetCurrentThreadId());
+	srand(GetCurrentThreadId());
 	FillSquare(pProblem);
 	*pAnswer = *pProblem;
 	RemoveNumbers(pProblem, clueNum);
@@ -25,6 +24,7 @@ static void FillSquare(PSUDOKU pSudoku) {
 	SuInitialize(pSudoku);
 	FillCell(pSudoku, 0);
 }
+
 
 static void RemoveNumbers(PSUDOKU pSudoku, int clueNum) {
 	int randIdx;
@@ -69,6 +69,7 @@ static int FillCell(PSUDOKU pSudoku, int idx) {
 	return 0;
 					
 }
+
 
 static int HaveSingleAnswer(const PSUDOKU pSudoku) {
 	SUDOKU sudoku = *pSudoku;
