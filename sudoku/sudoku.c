@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "sudoku.h"
 
 
@@ -8,24 +9,25 @@ void SuInitialize(PSUDOKU pSudoku) {
 
 
 void UpdateNumber(PSUDOKU pSudoku, UINT8 num, int index) {
-	if (pSudoku->elements[index])
-		if (! num)
+	if (pSudoku->elements[index]) {
+		if (!num)
 			pSudoku->filledNum--;
-	else
+	}
+	else {
 		if (num)
 			pSudoku->filledNum++;
+	}
 	pSudoku->elements[index] = num;
 }
 
 
-SUDOKU_API UINT16 GetValidNumber(PSUDOKU pSudoku, int index) {
+UINT16 GetValidNumber(PSUDOKU pSudoku, int index) {
 	UINT16 result = 0b0000001111111110;
 	int row = index / 9 + 1;
 	int col = index % 9 + 1;
 	int blockCenterRow = ((row - 1) / 3) * 3 + 2;
 	int blockCenterCol = ((col - 1) / 3) * 3 + 2;
-	int idx = 9;
-	while (idx--) {
+	for (int idx = 1; idx <= 9; idx++) {
 		result &= ~(1 << pSudoku->elements[Position(row, idx)]);
 		result &= ~(1 << pSudoku->elements[Position(idx, col)]);
 	}
@@ -37,4 +39,13 @@ SUDOKU_API UINT16 GetValidNumber(PSUDOKU pSudoku, int index) {
 		}
 	}
 	return result;
+}
+
+void PrintSudoku(PSUDOKU pSudoku) {
+	for (int i = 1; i <= 9; i++) {
+		for (int j = 1; j <= 9; j++) {
+			printf("%d ", pSudoku->elements[Position(i, j)]);
+		}
+		puts("");
+	}
 }

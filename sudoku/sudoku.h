@@ -20,3 +20,5 @@ SUDOKU_API void SuInitialize(PSUDOKU pSudoku);
 SUDOKU_API void UpdateNumber(PSUDOKU pSudoku, UINT8 num, int index);
 
 SUDOKU_API UINT16 GetValidNumber(PSUDOKU pSudoku, int index);
+
+SUDOKU_API void PrintSudoku(PSUDOKU pSudoku);
