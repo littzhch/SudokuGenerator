@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <time.h>
 #include "sudoku.h"
-#include "SudokuOperate.h"
 
 int main1(void) {
 	SUDOKU problem;

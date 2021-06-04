@@ -1,4 +1,4 @@
-#include "SudokuOperate.h"
+#include "sudoku.h"
 
 #define RandNum(min, max)  ((UINT8) (rand() % (max - min + 1) + min))
 static int SolveCell(PSUDOKU pSudoku, int* zeroIdxs, int arrMax, int currentPos);

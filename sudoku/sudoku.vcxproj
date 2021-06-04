@@ -144,6 +144,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="sudoku.c" />
+    <ClCompile Include="sudokugenerate.c" />
+    <ClCompile Include="sudokusolve.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sudoku.h" />

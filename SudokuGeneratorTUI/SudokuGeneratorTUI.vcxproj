@@ -139,9 +139,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SudokuOperate\SudokuOperate.vcxproj">
-      <Project>{7f015113-5079-45c0-8a2e-5dcc8ac9cd46}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\sudoku\sudoku.vcxproj">
       <Project>{6fcfcdc8-517e-4705-9180-f0b77e2d6db1}</Project>
     </ProjectReference>
