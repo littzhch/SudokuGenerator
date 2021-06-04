@@ -12,11 +12,10 @@ static int HaveSingleAnswer(const PSUDOKU pSudoku);
 static int SolveCell(PSUDOKU pSudoku, int * zeroIdxs, int arrMax, int currentPos, int* successTime);
 
 
-void GenerateSudoku(PSUDOKU pProblem, PSUDOKU pAnswer, int clueNum) {
-	srand(GetCurrentThreadId());
-	FillSquare(pProblem);
-	*pAnswer = *pProblem;
-	RemoveNumbers(pProblem, clueNum);
+void GenerateSudoku(PSUDOKUPUZZLE pPuzzle, int clueNum) {
+	FillSquare(&pPuzzle->problem);
+	pPuzzle->answer = pPuzzle->problem;
+	RemoveNumbers(&pPuzzle->problem, clueNum);
 }
 
 
