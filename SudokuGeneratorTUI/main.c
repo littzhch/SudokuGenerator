@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "sudoku.h"
+#include "MultiThread.h"
 
 int main1(void) {
 	SUDOKU problem;
@@ -20,7 +21,7 @@ int main1(void) {
 	getchar();
 }
 
-int main(void) {
+int main2(void) {
 	SUDOKU sudoku = {
 		   {0,0,4,0,0,0,0,0,3,
 			5,0,9,0,0,3,0,6,0,
@@ -38,4 +39,12 @@ int main(void) {
 	PrintSudoku(&sudoku);
 	SolveSudoku(&sudoku);
 	PrintSudoku(&sudoku);
+}
+
+int main(void) {
+	int t1 = time(NULL);
+	PSUDOKUPUZZLE sp = malloc(sizeof(SUDOKUPUZZLE) * 200000);
+	GenerateSudokuMT(sp, 2000000, 31, 31, 64, 0);
+	int t2 = time(NULL);
+	printf("%d\n", t2 - t1);
 }

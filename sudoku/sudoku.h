@@ -9,6 +9,7 @@
 
 #define Position(row, col)     (9 * row  + col - 10)
 #define IsValid(bits, number)  ((bits >> number) & 1)
+#define RandNum(min, max)      ((UINT8) (rand() % (max - min + 1) + min))
 
 typedef struct sudoku {
 	UINT8 elements[81];
@@ -18,6 +19,7 @@ typedef struct sudoku {
 typedef struct {
 	SUDOKU problem;
 	SUDOKU answer;
+	int clueNum;
 } SUDOKUPUZZLE, * PSUDOKUPUZZLE;
 
 SUDOKU_API void SuInitialize(PSUDOKU pSudoku);
@@ -30,9 +32,9 @@ SUDOKU_API void PrintSudoku(PSUDOKU pSudoku);
 
 
 
-SUDOKU_API void GenerateSudoku(PSUDOKUPUZZLE pPuzzle, int clueNum);
+SUDOKU_API void GenerateSudoku(PSUDOKUPUZZLE pPuzzle);
 // 生成数独，clueNum指定提示数数量
-// 适用于多线程同时调用，同一线程多次调用结果相同
+// 适用于多线程同时调用
 
 SUDOKU_API void SolveSudoku(PSUDOKU pProblem);
 // 求解数独，只填充数独的一个解

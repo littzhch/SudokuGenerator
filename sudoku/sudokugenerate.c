@@ -3,8 +3,6 @@
 #include "sudoku.h"
 
 
-#define RandNum(min, max)  ((UINT8) (rand() % (max - min + 1) + min))
-
 static void FillSquare(PSUDOKU pSudoku);
 static void RemoveNumbers(PSUDOKU pSudoku, int clueNum);
 static int FillCell(PSUDOKU pSudoku, int idx);
@@ -12,10 +10,10 @@ static int HaveSingleAnswer(const PSUDOKU pSudoku);
 static int SolveCell(PSUDOKU pSudoku, int * zeroIdxs, int arrMax, int currentPos, int* successTime);
 
 
-void GenerateSudoku(PSUDOKUPUZZLE pPuzzle, int clueNum) {
+void GenerateSudoku(PSUDOKUPUZZLE pPuzzle) {
 	FillSquare(&pPuzzle->problem);
 	pPuzzle->answer = pPuzzle->problem;
-	RemoveNumbers(&pPuzzle->problem, clueNum);
+	RemoveNumbers(&pPuzzle->problem, pPuzzle->clueNum);
 }
 
 
