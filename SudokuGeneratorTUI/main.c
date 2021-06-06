@@ -43,8 +43,16 @@ int main2(void) {
 
 int main(void) {
 	int t1 = time(NULL);
-	PSUDOKUPUZZLE sp = malloc(sizeof(SUDOKUPUZZLE) * 200000);
-	GenerateSudokuMT(sp, 200000, 31, 31, 64, 1);
+	PSUDOKUPUZZLE sp = malloc(sizeof(SUDOKUPUZZLE) * 1);
+	GenerateSudokuMT(sp, 1, 24, 24, 1, 1);
 	int t2 = time(NULL);
 	printf("%d\n", t2 - t1);
+}
+
+int main4(void) {
+	srand(time(NULL));
+	SUDOKUPUZZLE sudokup;
+	sudokup.clueNum = 24;
+	GenerateSudoku(&sudokup);
+	PrintSudoku(&sudokup.problem);
 }
