@@ -2,6 +2,7 @@
 #include <time.h>
 #include "sudoku.h"
 #include "MultiThread.h"
+#include "SudokuIO.h"
 
 int main1(void) {
 	SUDOKU problem;
@@ -41,7 +42,7 @@ int main2(void) {
 	PrintSudoku(&sudoku);
 }
 
-int main(void) {
+int main3(void) {
 	int t1 = time(NULL);
 	PSUDOKUPUZZLE sp = malloc(sizeof(SUDOKUPUZZLE) * 1);
 	GenerateSudokuMT(sp, 1, 24, 24, 1, 1);
@@ -55,4 +56,8 @@ int main4(void) {
 	sudokup.clueNum = 24;
 	GenerateSudoku(&sudokup);
 	PrintSudoku(&sudokup.problem);
+}
+
+int main(void) {
+	printf("%d\n", SetupRepository());
 }

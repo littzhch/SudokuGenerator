@@ -31,7 +31,7 @@ void GenerateSudokuMT(
 	puzzlePtr = 0;
 	maxNum = amount;
 	InitializeCriticalSection(&csNext);
-
+	//TODO: 删除多余提示，使用回调函数显示进度
 
 	if (showInfo) {
 		printf("generating clue numbers...");
@@ -69,7 +69,7 @@ void GenerateSudokuMT(
 }
 
 
-unsigned int _stdcall WorkThreadProc(void* arg) {
+unsigned int _stdcall WorkThreadProc(void* arg) {  //TODO: 添加生成时间限制
 	srand(GetCurrentThreadId());
 	PSUDOKUPUZZLE pPuzzle;
 	while ((pPuzzle = GetNext())) {

@@ -15,7 +15,7 @@ static inline void exchange(int* a, int* b);
 static int RemoveCell(PSUDOKU pSudoku, int* idxOrder, int clueNum);
 
 
-void GenerateSudoku(PSUDOKUPUZZLE pPuzzle) {
+void GenerateSudoku(PSUDOKUPUZZLE pPuzzle) {   //TODO: 添加错误处理
 	FillSquare(&pPuzzle->problem);
 	pPuzzle->answer = pPuzzle->problem;
 	RemoveNumbers_1(&pPuzzle->problem, pPuzzle->clueNum);
@@ -29,7 +29,7 @@ static inline void FillSquare(PSUDOKU pSudoku) {
 
 
 
-static void RemoveNumbers_1(PSUDOKU pSudoku, int clueNum) {
+static void RemoveNumbers_1(PSUDOKU pSudoku, int clueNum) {  //TODO: 选择合适的RemoveNumbers算法
 	int randIdx;
 	int dotInfoPtr = 0;
 	struct {
