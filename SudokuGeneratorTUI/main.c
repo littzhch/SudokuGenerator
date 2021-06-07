@@ -4,17 +4,10 @@
 #include "MultiThread.h"
 #include "SudokuIO.h"
 
-<<<<<<< Updated upstream
 int main1(void) {
 	SUDOKUPUZZLE puzzle;
 	puzzle.clueNum = 25;
 	int i = 5;
-=======
-int main(void) {
-	SUDOKUPUZZLE puzzle;
-	puzzle.clueNum = 24;
-	int i = 1;
->>>>>>> Stashed changes
 	srand(GetCurrentThreadId());
 	while (i--) {
 		GenerateSudoku(&puzzle);
