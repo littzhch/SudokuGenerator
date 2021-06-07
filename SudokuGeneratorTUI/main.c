@@ -4,10 +4,17 @@
 #include "MultiThread.h"
 #include "SudokuIO.h"
 
+<<<<<<< Updated upstream
 int main1(void) {
 	SUDOKU problem;
 	SUDOKU answer;
 	int i = 5;
+=======
+int main(void) {
+	SUDOKUPUZZLE puzzle;
+	puzzle.clueNum = 24;
+	int i = 1;
+>>>>>>> Stashed changes
 	srand(GetCurrentThreadId());
 	time_t t1 = time(NULL);
 	while (i--) {
