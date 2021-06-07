@@ -5,7 +5,7 @@
 #include <time.h>
 #include "sudoku.h"
 #include "MultiThread.h"
-
+//TRY: 求解数独的多线程版本
 static _Bool printInfo;
 static PSUDOKUPUZZLE start;
 static int puzzlePtr;
@@ -69,7 +69,7 @@ void GenerateSudokuMT(
 }
 
 
-unsigned int _stdcall WorkThreadProc(void* arg) {  //TODO: 添加生成时间限制
+unsigned int _stdcall WorkThreadProc(void* arg) {  //TRY: 添加生成时间限制
 	srand(GetCurrentThreadId());
 	PSUDOKUPUZZLE pPuzzle;
 	while ((pPuzzle = GetNext())) {

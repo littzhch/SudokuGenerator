@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "SudokuIO.h"
 
+//TRY: 设置错误代码
 
-static char* repoName = "sudoku.repo";
 static inline int HaveRepository(void);
 
 int SetupRepository(void) {
@@ -10,7 +10,7 @@ int SetupRepository(void) {
 		return 1;
 	}
 	FILE* file = NULL;
-	fopen_s(&file, repoName, "wb");
+	fopen_s(&file, REPONAME, "wb");
 	if (!file) {
 		return -1;
 	}
@@ -31,7 +31,7 @@ int CleanRepository(void) {
 	}
 	
 	FILE* file = NULL;
-	fopen_s(&file, repoName, "wb");
+	fopen_s(&file, REPONAME, "wb");
 	if (!file) {
 		return -1;
 	}
@@ -44,7 +44,7 @@ int CleanRepository(void) {
 
 int GetPuzzleAmountInRepository(void) {
 	FILE* file = NULL;
-	fopen_s(&file, repoName, "rb");
+	fopen_s(&file, REPONAME, "rb");
 	if (!file) {
 		return -1;
 	}
@@ -55,9 +55,9 @@ int GetPuzzleAmountInRepository(void) {
 }
 
 //TODO: 确定存储上限并加以限制，选择合适的数量类型
-int AddToRepository(const PSUDOKUPUZZLE puzzles, int amount) {  //TODO: 使用更高效的存储方式
+int AddToRepository(const PSUDOKUPUZZLE puzzles, int amount) {  //TRY: 使用更高效的存储方式
 	FILE* file = NULL;
-	fopen_s(&file, repoName, "rb+");
+	fopen_s(&file, REPONAME, "rb+");
 	if (!file) {
 		return -1;
 	}
@@ -77,7 +77,7 @@ int AddToRepository(const PSUDOKUPUZZLE puzzles, int amount) {  //TODO: 使用更高
 
 static inline int HaveRepository(void) {
 	FILE* file = NULL;
-	fopen_s(&file, repoName, "rb");
+	fopen_s(&file, REPONAME, "rb");
 	if (file) {
 		fclose(file);
 		return 1;

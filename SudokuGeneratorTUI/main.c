@@ -2,7 +2,7 @@
 #include <time.h>
 #include "sudoku.h"
 #include "MultiThread.h"
-#include "SudokuIO.h"
+#include "SudokuIO.h" //TODO: 为头文件添加注释
 
 int main1(void) {
 	SUDOKUPUZZLE puzzle;
@@ -39,7 +39,7 @@ int main2(void) {
 	PrintSudoku(&sudoku);
 }
 
-int main(void) {
+int main3(void) {
 	int t1 = time(NULL);
 	PSUDOKUPUZZLE sp = malloc(sizeof(SUDOKUPUZZLE) * 100000);
 	GenerateSudokuMT(sp, 100000, 31, 31, 64, 1);
@@ -67,6 +67,10 @@ int main5(void) {
 	return 0;
 }
 
-int main6(void) {
-	CleanRepository();
+int main(void) {
+	SetupRepository();
+	SUDOKUPUZZLE puzzles;
+	GenerateSudokuMT(&puzzles, 1, 26, 26, 1, 0);
+	AddToRepository(&puzzles, 1);
+	ExportRepoAsJson("result.json");
 }

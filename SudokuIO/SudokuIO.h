@@ -6,7 +6,7 @@
 #endif
 
 #include "sudoku.h"
-
+#define REPONAME "sudoku.repo"
 
 SUDOKUIO_API int SetupRepository(void);
 // 创建存储库，若成功，返回0；若已存在存储库，返回1；若失败，返回-1
@@ -19,3 +19,9 @@ SUDOKUIO_API int GetPuzzleAmountInRepository(void);
 
 SUDOKUIO_API int AddToRepository(const PSUDOKUPUZZLE puzzles, int amount);
 // 向存储库中添加数独。若成功，返回0；若无存储库或存储库打开失败，返回-1
+
+
+
+SUDOKU_API int ExportRepoAsJson(const char * filepath);
+// 导出为json格式。正常返回0
+// 若无法打开存储库，返回-1；若无法打开目标文件，返回-2；若存储库中数独数量为0，返回-3；

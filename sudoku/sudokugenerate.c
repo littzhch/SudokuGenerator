@@ -15,7 +15,7 @@ static inline void exchange(int* a, int* b);
 static int RemoveCell(PSUDOKU pSudoku, int* idxOrder, int clueNum);
 
 
-void GenerateSudoku(PSUDOKUPUZZLE pPuzzle) {   //TODO: 添加错误处理
+void GenerateSudoku(PSUDOKUPUZZLE pPuzzle) {   //TRY: 添加错误处理
 	FillSquare(&pPuzzle->problem);
 	pPuzzle->answer = pPuzzle->problem;
 	RemoveNumbers_1(&pPuzzle->problem, pPuzzle->clueNum);

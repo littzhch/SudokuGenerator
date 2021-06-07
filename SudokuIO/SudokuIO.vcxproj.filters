@@ -23,5 +23,8 @@
     <ClCompile Include="sudokurepo.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="json.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

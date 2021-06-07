@@ -145,6 +145,7 @@
     <ClInclude Include="SudokuIO.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="json.c" />
     <ClCompile Include="sudokurepo.c" />
   </ItemGroup>
   <ItemGroup>

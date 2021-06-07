@@ -14,5 +14,3 @@ MULTITHREAD_API void GenerateSudokuMT(
 	int maxClue, 
 	int maxThread, 
 	_Bool showInfo);
-
-//TODO: 求解数独的多线程版本
