@@ -146,14 +146,14 @@ static int RemoveCell(PSUDOKU pSudoku, int* idxOrder, int clueNum) {
 	int cellNum;
 	for (int idx = 0; idx < 81; idx++) {
 		if (pSudoku->elements[idxOrder[idx]]) {
-			cellNum = pSudoku->elements[idxOrder[idx]];
-			UpdateNumber(pSudoku, 0, idxOrder[idx]);
 			if (HaveSingleAnswerAfterRemove(pSudoku, idx)) {
+				cellNum = pSudoku->elements[idxOrder[idx]];
+				UpdateNumber(pSudoku, 0, idxOrder[idx]);
 				if (RemoveCell(pSudoku, idxOrder, clueNum)) {
 					return 1;
 				}
+				UpdateNumber(pSudoku, cellNum, idxOrder[idx]);
 			}
-			UpdateNumber(pSudoku, cellNum, idxOrder[idx]);
 		}
 	}
 	return 0;
