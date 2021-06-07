@@ -54,17 +54,24 @@ int GetPuzzleAmountInRepository(void) {
 	return result;
 }
 
-
-int AddToRepository(PSUDOKUPUZZLE puzzles, int amount) {
-	if (! HaveRepository()) {
-		return -1;
-	}
+//TODO: 确定存储上限并加以限制，选择合适的数量类型
+int AddToRepository(const PSUDOKUPUZZLE puzzles, int amount) {  //TODO: 使用更高效的存储方式
 	FILE* file = NULL;
-	fopen_s(&file, repoName, "ab+");
+	fopen_s(&file, repoName, "rb+");
 	if (!file) {
 		return -1;
 	}
-	
+	int number;
+	fread(&number, sizeof(int), 1, file);
+	number += amount;
+	rewind(file);
+	fwrite(&number, sizeof(int), 1, file);
+	if (fseek(file, 0, SEEK_END)) {
+		return -1;
+	}
+	fwrite(puzzles, sizeof(SUDOKUPUZZLE), amount, file);
+	fclose(file);
+	return 0;
 }
 
 

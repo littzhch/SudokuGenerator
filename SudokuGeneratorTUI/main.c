@@ -6,8 +6,8 @@
 
 <<<<<<< Updated upstream
 int main1(void) {
-	SUDOKU problem;
-	SUDOKU answer;
+	SUDOKUPUZZLE puzzle;
+	puzzle.clueNum = 25;
 	int i = 5;
 =======
 int main(void) {
@@ -16,16 +16,13 @@ int main(void) {
 	int i = 1;
 >>>>>>> Stashed changes
 	srand(GetCurrentThreadId());
-	time_t t1 = time(NULL);
 	while (i--) {
-		GenerateSudoku(&problem, &answer, 30);
-		PrintSudoku(&problem);
+		GenerateSudoku(&puzzle);
+		PrintSudoku(&puzzle.problem);
 		puts("-");
-		PrintSudoku(&answer);
+		PrintSudoku(&puzzle.answer);
 		puts("-");
 	}
-	time_t t2 = time(NULL);
-	printf("%lld", t2 - t1);
 	getchar();
 }
 
@@ -49,10 +46,10 @@ int main2(void) {
 	PrintSudoku(&sudoku);
 }
 
-int main3(void) {
+int main(void) {
 	int t1 = time(NULL);
-	PSUDOKUPUZZLE sp = malloc(sizeof(SUDOKUPUZZLE) * 1);
-	GenerateSudokuMT(sp, 1, 24, 24, 1, 1);
+	PSUDOKUPUZZLE sp = malloc(sizeof(SUDOKUPUZZLE) * 100000);
+	GenerateSudokuMT(sp, 100000, 31, 31, 64, 1);
 	int t2 = time(NULL);
 	printf("%d\n", t2 - t1);
 }
@@ -65,6 +62,18 @@ int main4(void) {
 	PrintSudoku(&sudokup.problem);
 }
 
-int main(void) {
-	printf("%d\n", SetupRepository());
+int main5(void) {
+	printf("%d\n", sizeof(SUDOKUPUZZLE));
+	SetupRepository();
+	SUDOKUPUZZLE puzzles[1000];
+	GenerateSudokuMT(puzzles, 1000, 30, 60, 32, 1);
+	int code = AddToRepository(puzzles, 1000);
+	printf("%d\n", code);
+	
+	printf("%d\n", GetPuzzleAmountInRepository());
+	return 0;
+}
+
+int main6(void) {
+	CleanRepository();
 }
