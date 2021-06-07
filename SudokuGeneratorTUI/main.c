@@ -39,10 +39,10 @@ int main2(void) {
 	PrintSudoku(&sudoku);
 }
 
-int main3(void) {
+int main(void) {
 	int t1 = time(NULL);
 	PSUDOKUPUZZLE sp = malloc(sizeof(SUDOKUPUZZLE) * 100000);
-	GenerateSudokuMT(sp, 100000, 31, 31, 64, 0);
+	GenerateSudokuMT(sp, 100000, 31, 31, 64, 1);
 	int t2 = time(NULL);
 	printf("%d\n", t2 - t1);
 }

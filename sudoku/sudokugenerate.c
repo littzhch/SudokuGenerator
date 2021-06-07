@@ -3,13 +3,13 @@
 #include "sudoku.h"
 
 
-static inline void FillSquare(PSUDOKU pSudoku);                  // 填充数独盘
-static inline void RemoveNumbers_1(PSUDOKU pSudoku, int clueNum);  // 打洞
+static inline void FillSquare(PSUDOKU pSudoku);												// 填充数独盘
+static inline void RemoveNumbers_1(PSUDOKU pSudoku, int clueNum);							// 打洞
 static inline void RemoveNumbers_2(PSUDOKU pSudoku, int clueNum);
-static int FillCell(PSUDOKU pSudoku, int idx);					 // 在FillSquare()中被调用，递归函数
-static inline int HaveSingleAnswerAfterRemove(const PSUDOKU pSudoku, int removeIdx);       // 在RemoveNumbers中被调用
+static int FillCell(PSUDOKU pSudoku, int idx);												// 在FillSquare()中被调用，递归函数
+static inline int HaveSingleAnswerAfterRemove(const PSUDOKU pSudoku, int removeIdx);		// 在RemoveNumbers中被调用
 static int SolveCell(PSUDOKU pSudoku, int * zeroIdxs, 
-	int arrMax, int currentPos);				 // 在HaveSingleAnswer中被调用，递归函数
+	int arrMax, int currentPos);														    // 在HaveSingleAnswer中被调用，递归函数
 static inline void shuffle(int * numbers, int amount);
 static inline void exchange(int* a, int* b);
 static int RemoveCell(PSUDOKU pSudoku, int* idxOrder, int clueNum);
