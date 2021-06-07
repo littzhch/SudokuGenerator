@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "SudokuIO.h"
 
+
 static char* repoName = "sudoku.repo";
 static inline int HaveRepository(void);
 
