@@ -17,5 +17,5 @@ SUDOKUIO_API int CleanRepository(void);
 SUDOKUIO_API int GetPuzzleAmountInRepository(void);
 // 获取存储库中的数独题目数量。若无存储库或存储库打开失败，返回-1
 
-SUDOKUIO_API int AddToRepository(PSUDOKUPUZZLE puzzles, int amount);
+SUDOKUIO_API int AddToRepository(const PSUDOKUPUZZLE puzzles, int amount);
 // 向存储库中添加数独。若成功，返回0；若无存储库或存储库打开失败，返回-1
