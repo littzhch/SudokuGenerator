@@ -13,4 +13,4 @@ MULTITHREAD_API void GenerateSudokuMT(
 	int minClue, 
 	int maxClue, 
 	int maxThread, 
-	_Bool showInfo);
+	void (*InfoProgress)(int current, int total));

@@ -68,7 +68,7 @@ int main5(void) {
 	return 0;
 }
 
-int main(void) {
+int main6(void) {
 	CleanRepository();
 	SUDOKUPUZZLE puzzles[IMPORTBUFFERLEN];
 	int amount;
@@ -92,4 +92,39 @@ int main7(void) {
 	AddToRepository(puzzles, 1000);
 	ExportRepoAsJson("result.json");
 	return 0;
+}
+
+
+static void PrintProgress(int current, int total) {
+	HANDLE screen = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO screenInfo;
+	GetConsoleScreenBufferInfo(screen, &screenInfo);
+	int maxchar = screenInfo.dwSize.X;
+	int maxbar = maxchar * 2 / 3;
+	int finished = maxbar * current / total;
+	int unfinished = maxbar - finished;
+	int bufferPtr = 0;
+	char buffer[512];
+
+	buffer[bufferPtr++] = '\r';
+	buffer[bufferPtr++] = '[';
+	while (finished--) {
+		buffer[bufferPtr++] = '#';
+	}
+	while (unfinished--) {
+		buffer[bufferPtr++] = '-';
+	}
+	buffer[bufferPtr++] = ']';
+	buffer[bufferPtr++] = ' ';
+	sprintf_s(buffer + bufferPtr, 5, "%3d", 100 * current / total);
+	bufferPtr += 3;
+	buffer[bufferPtr++] = '%';
+	buffer[bufferPtr] = '\0';
+
+	fputs(buffer, stdout);
+}
+
+int main(void) {
+	SUDOKUPUZZLE puzzles[1000];
+	GenerateSudokuMT(puzzles, 1000, 30, 30, 64, PrintProgress);
 }
