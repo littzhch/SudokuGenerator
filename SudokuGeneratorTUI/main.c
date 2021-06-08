@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include "sudoku.h"
 #include "MultiThread.h"
-#include "SudokuIO.h" //TODO: 为头文件添加注释
+#include "SudokuIO.h"
 
 int main1(void) {
 	SUDOKUPUZZLE puzzle;
