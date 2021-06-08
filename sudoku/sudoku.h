@@ -36,5 +36,5 @@ SUDOKU_API void GenerateSudoku(PSUDOKUPUZZLE pPuzzle);
 // 生成数独，clueNum指定提示数数量
 // 适用于多线程同时调用
 
-SUDOKU_API void SolveSudoku(PSUDOKU pProblem);
+SUDOKU_API void SolveSudoku(PSUDOKUPUZZLE pPuzzle);
 // 求解数独，只填充数独的一个解

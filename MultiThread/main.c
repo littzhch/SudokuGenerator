@@ -25,7 +25,7 @@ void GenerateSudokuMT(
 	int maxThread,
 	_Bool showInfo)
 {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	printInfo = showInfo;
 	start = pPuzzleStart;
 	puzzlePtr = 0;
@@ -45,7 +45,7 @@ void GenerateSudokuMT(
 	HANDLE* threadHds = malloc(sizeof(HANDLE) * maxThread);
 	unsigned int threadId;
 	for (int idx = 0; idx < maxThread; idx++) {
-		threadHds[idx] = _beginthreadex(NULL, 0, WorkThreadProc, NULL, 0, &threadId);
+		threadHds[idx] = (HANDLE) _beginthreadex(NULL, 0, WorkThreadProc, NULL, 0, &threadId);
 		if (showInfo) {
 			printf("thread 0x%04x created\n", threadId);
 		}

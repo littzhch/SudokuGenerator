@@ -3,15 +3,17 @@
 
 static int SolveCell(PSUDOKU pSudoku, int* zeroIdxs, int arrMax, int currentPos);
 
-void SolveSudoku(PSUDOKU pProblem) {
+void SolveSudoku(PSUDOKUPUZZLE pPuzzle) {
 	int arrMax = 0;
 	int zeroIdxs[81];
+	pPuzzle->answer = pPuzzle->problem;
+
 	for (int idx = 0; idx < 81; idx++) {
-		if (!pProblem->elements[idx]) {
+		if (!pPuzzle->answer.elements[idx]) {
 			zeroIdxs[arrMax++] = idx;
 		}
 	}
-	SolveCell(pProblem, zeroIdxs, arrMax, 0);
+	SolveCell(&pPuzzle->answer, zeroIdxs, arrMax, 0);
 }
 
 static int SolveCell(PSUDOKU pSudoku, int* zeroIdxs, int arrMax, int currentPos) {

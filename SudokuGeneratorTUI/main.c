@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <time.h>
+#include <ctype.h>
 #include "sudoku.h"
 #include "MultiThread.h"
 #include "SudokuIO.h" //TODO: 为头文件添加注释
@@ -56,7 +57,7 @@ int main4(void) {
 }
 
 int main5(void) {
-	printf("%d\n", sizeof(SUDOKUPUZZLE));
+	printf("%zd\n", sizeof(SUDOKUPUZZLE));
 	SetupRepository();
 	SUDOKUPUZZLE puzzles[1000];
 	GenerateSudokuMT(puzzles, 1000, 30, 60, 32, 1);
@@ -68,9 +69,27 @@ int main5(void) {
 }
 
 int main(void) {
-	SetupRepository();
-	SUDOKUPUZZLE puzzles;
-	GenerateSudokuMT(&puzzles, 1, 26, 26, 1, 0);
-	AddToRepository(&puzzles, 1);
+	CleanRepository();
+	SUDOKUPUZZLE puzzles[IMPORTBUFFERLEN];
+	int amount;
+	while (1) {
+		amount = ImportPuzzleFromJson(puzzles, "result.json");
+		for (int idx = 0; idx < amount; idx++) {
+			SolveSudoku(puzzles + idx);
+		}
+		AddToRepository(puzzles, amount);
+		if (amount < IMPORTBUFFERLEN) {
+			break;
+		}
+	}
+	ExportRepoAsJson("result2.json");
+}
+
+int main7(void) {
+	CleanRepository();
+	SUDOKUPUZZLE puzzles[1000];
+	GenerateSudokuMT(puzzles, 1000, 29, 70, 64, 1);
+	AddToRepository(puzzles, 1000);
 	ExportRepoAsJson("result.json");
+	return 0;
 }

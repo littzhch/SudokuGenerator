@@ -9,9 +9,11 @@ int SetupRepository(void) {
 	if (HaveRepository()) {
 		return 1;
 	}
-	FILE* file = NULL;
-	fopen_s(&file, REPONAME, "wb");
-	if (!file) {
+
+	int code;
+	FILE* file;
+	code = fopen_s(&file, REPONAME, "wb");
+	if (code) {
 		return -1;
 	}
 	int buffer = 0;
@@ -30,9 +32,9 @@ int CleanRepository(void) {
 		return -1;
 	}
 	
-	FILE* file = NULL;
-	fopen_s(&file, REPONAME, "wb");
-	if (!file) {
+	FILE* file;
+	code = fopen_s(&file, REPONAME, "wb");
+	if (code) {
 		return -1;
 	}
 	int buffer = 0;
@@ -43,9 +45,10 @@ int CleanRepository(void) {
 
 
 int GetPuzzleAmountInRepository(void) {
-	FILE* file = NULL;
-	fopen_s(&file, REPONAME, "rb");
-	if (!file) {
+	FILE* file;
+	int code;
+	code = fopen_s(&file, REPONAME, "rb");
+	if (code) {
 		return -1;
 	}
 	int result;
@@ -56,9 +59,11 @@ int GetPuzzleAmountInRepository(void) {
 
 //TODO: »∑∂®¥Ê¥¢…œœﬁ≤¢º”“‘œﬁ÷∆£¨—°‘Ò∫œ  µƒ ˝¡ø¿‡–Õ
 int AddToRepository(const PSUDOKUPUZZLE puzzles, int amount) {  //TRY:  π”√∏¸∏ﬂ–ßµƒ¥Ê¥¢∑Ω Ω
-	FILE* file = NULL;
-	fopen_s(&file, REPONAME, "rb+");
-	if (!file) {
+	FILE* file;
+	int code;
+
+	code = fopen_s(&file, REPONAME, "rb+");
+	if (code) {
 		return -1;
 	}
 	int number;
@@ -76,9 +81,10 @@ int AddToRepository(const PSUDOKUPUZZLE puzzles, int amount) {  //TRY:  π”√∏¸∏ﬂ–
 
 
 static inline int HaveRepository(void) {
-	FILE* file = NULL;
-	fopen_s(&file, REPONAME, "rb");
-	if (file) {
+	FILE* file;
+	int code;
+	code = fopen_s(&file, REPONAME, "rb");
+	if (! code) {
 		fclose(file);
 		return 1;
 	}
