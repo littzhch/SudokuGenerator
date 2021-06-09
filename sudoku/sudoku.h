@@ -42,6 +42,7 @@ SUDOKU_API void GenerateSudoku(PSUDOKUPUZZLE pPuzzle);
 // 生成数独，clueNum指定提示数数量；problem和answer不需要初始化
 // 可重入函数，适用于多线程同时调用
 
-SUDOKU_API void SolveSudoku(PSUDOKUPUZZLE pPuzzle);
+SUDOKU_API int SolveSudoku(PSUDOKUPUZZLE pPuzzle);
 // 求解数独，只求出数独的一个解
 // 不修正filledNum，不更改clueNum
+// 若成功求出解，返回0；若无解，返回-1

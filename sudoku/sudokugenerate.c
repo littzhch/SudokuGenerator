@@ -3,23 +3,20 @@
 #include "sudoku.h"
 
 
-static inline void FillSquare(PSUDOKU pSudoku);												// 填充数独盘
-static inline void RemoveNumbers_1(PSUDOKU pSudoku, int clueNum);							// 打洞
-static inline void RemoveNumbers_2(PSUDOKU pSudoku, int clueNum);
-static int FillCell(PSUDOKU pSudoku, int idx);												// 在FillSquare()中被调用，递归函数
-static inline int HaveSingleAnswerAfterRemove(const PSUDOKU pSudoku, int removeIdx);		// 在RemoveNumbers中被调用
+static inline void FillSquare(PSUDOKU pSudoku);						// 填充数独盘
+static inline void RemoveNumbers(PSUDOKU pSudoku, int clueNum);		// 打洞
+static int FillCell(PSUDOKU pSudoku, int idx);						// 在FillSquare()中被调用，递归函数
+static inline int HaveSingleAnswerAfterRemove(const PSUDOKU pSudoku, int removeIdx); // 在RemoveNumbers中被调用
 static int SolveCell(PSUDOKU pSudoku, int * zeroIdxs, 
-	int arrMax, int currentPos);														    // 在HaveSingleAnswer中被调用，递归函数
-static inline void shuffle(int * numbers, int amount);
-static inline void exchange(int* a, int* b);
-static int RemoveCell(PSUDOKU pSudoku, int* idxOrder, int clueNum);
+	int arrMax, int currentPos); // 在HaveSingleAnswer中被调用，递归函数
 
 
 void GenerateSudoku(PSUDOKUPUZZLE pPuzzle) {   //TRY: 添加错误处理
 	FillSquare(&pPuzzle->problem);
 	pPuzzle->answer = pPuzzle->problem;
-	RemoveNumbers_1(&pPuzzle->problem, pPuzzle->clueNum);
+	RemoveNumbers(&pPuzzle->problem, pPuzzle->clueNum);
 }
+
 
 
 static inline void FillSquare(PSUDOKU pSudoku) {
@@ -27,9 +24,7 @@ static inline void FillSquare(PSUDOKU pSudoku) {
 	FillCell(pSudoku, 0);
 }
 
-
-
-static void RemoveNumbers_1(PSUDOKU pSudoku, int clueNum) {  //TODO: 选择合适的RemoveNumbers算法
+static void RemoveNumbers(PSUDOKU pSudoku, int clueNum) {
 	int randIdx;
 	while (pSudoku->filledNum > clueNum) {
 		while (!pSudoku->elements[randIdx = RandNum(0, 80)])
@@ -39,17 +34,6 @@ static void RemoveNumbers_1(PSUDOKU pSudoku, int clueNum) {  //TODO: 选择合适的R
 		}
 	}
 }
-
-
-static inline void RemoveNumbers_2(PSUDOKU pSudoku, int clueNum) {
-	int idxOrder[81];
-	for (int idx = 0; idx < 81; idx++) {
-		idxOrder[idx] = idx;
-	}
-	shuffle(idxOrder, 81);
-	RemoveCell(pSudoku, idxOrder, clueNum);
-}
-
 
 static int FillCell(PSUDOKU pSudoku, int idx) {
 	if (idx == 81) {
@@ -73,7 +57,6 @@ static int FillCell(PSUDOKU pSudoku, int idx) {
 					
 }
 
-
 static inline int HaveSingleAnswerAfterRemove(const PSUDOKU pSudoku, int removeIdx) {
 	SUDOKU sudoku = *pSudoku;
 	UINT16 validNums = GetValidNumber(&sudoku, removeIdx);
@@ -96,7 +79,6 @@ static inline int HaveSingleAnswerAfterRemove(const PSUDOKU pSudoku, int removeI
 	return 1;
 }
 
-
 static int SolveCell(PSUDOKU pSudoku, int* zeroIdxs, 
 	int arrMax, int currentPos) {
 	if (currentPos == arrMax) {
@@ -116,45 +98,5 @@ static int SolveCell(PSUDOKU pSudoku, int* zeroIdxs,
 		}
 	}
 	UpdateNumber(pSudoku, 0, zeroIdxs[currentPos]);
-	return 0;
-}
-
-
-static inline void shuffle(int* numbers, int amount) {
-	int dest;
-	for (int idx = 0; idx < amount; idx++) {
-		dest = RandNum(idx, amount - 1);
-		exchange(numbers + idx, numbers + dest);
-	}
-}
-
-
-static inline void exchange(int* a, int* b) {
-	if (a == b) {
-		return;
-	}
-	*a = (*a) ^ (*b);
-	*b = (*a) ^ (*b);
-	*a = (*a) ^ (*b);
-}
-
-
-static int RemoveCell(PSUDOKU pSudoku, int* idxOrder, int clueNum) {
-	if (pSudoku->filledNum == clueNum) {
-		return 1;
-	}
-	int cellNum;
-	for (int idx = 0; idx < 81; idx++) {
-		if (pSudoku->elements[idxOrder[idx]]) {
-			if (HaveSingleAnswerAfterRemove(pSudoku, idx)) {
-				cellNum = pSudoku->elements[idxOrder[idx]];
-				UpdateNumber(pSudoku, 0, idxOrder[idx]);
-				if (RemoveCell(pSudoku, idxOrder, clueNum)) {
-					return 1;
-				}
-				UpdateNumber(pSudoku, cellNum, idxOrder[idx]);
-			}
-		}
-	}
 	return 0;
 }

@@ -38,14 +38,23 @@ int main2(void) {
 	PrintSudoku(&sudoku);
 	SolveSudoku(&sudoku);
 	PrintSudoku(&sudoku);
+} 
+
+void PrintP(int c, int t) {
+	printf("%d/%d\n", c, t);
 }
 
 int main3(void) {
+	SetupRepository();
 	int t1 = time(NULL);
-	PSUDOKUPUZZLE sp = malloc(sizeof(SUDOKUPUZZLE) * 100000);
-	GenerateSudokuMT(sp, 100000, 31, 31, 64, 1);
+	PSUDOKUPUZZLE sp = malloc(sizeof(SUDOKUPUZZLE) * 100);
+	GenerateSudokuMT(sp, 100, 31, 31, 16, PrintP);
 	int t2 = time(NULL);
 	printf("%d\n", t2 - t1);
+	AddToRepository(sp, 100);
+	puts("added");
+	ExportRepoAsJson("result.json");
+	free(sp);
 }
 
 int main4(void) {
@@ -68,7 +77,7 @@ int main5(void) {
 	return 0;
 }
 
-int main6(void) {
+int main(void) {
 	CleanRepository();
 	SUDOKUPUZZLE puzzles[IMPORTBUFFERLEN];
 	int amount;
@@ -124,7 +133,7 @@ static void PrintProgress(int current, int total) {
 	fputs(buffer, stdout);
 }
 
-int main(void) {
+int main8(void) {
 	SUDOKUPUZZLE puzzles[1000];
 	GenerateSudokuMT(puzzles, 1000, 30, 30, 64, PrintProgress);
 }

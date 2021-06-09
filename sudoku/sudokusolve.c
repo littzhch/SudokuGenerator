@@ -3,7 +3,7 @@
 
 static int SolveCell(PSUDOKU pSudoku, int* zeroIdxs, int arrMax, int currentPos);
 
-void SolveSudoku(PSUDOKUPUZZLE pPuzzle) {
+int SolveSudoku(PSUDOKUPUZZLE pPuzzle) {
 	int arrMax = 0;
 	int zeroIdxs[81];
 	pPuzzle->answer = pPuzzle->problem;
@@ -13,7 +13,7 @@ void SolveSudoku(PSUDOKUPUZZLE pPuzzle) {
 			zeroIdxs[arrMax++] = idx;
 		}
 	}
-	SolveCell(&pPuzzle->answer, zeroIdxs, arrMax, 0);
+	return SolveCell(&pPuzzle->answer, zeroIdxs, arrMax, 0);
 }
 
 static int SolveCell(PSUDOKU pSudoku, int* zeroIdxs, int arrMax, int currentPos) {
@@ -22,7 +22,7 @@ static int SolveCell(PSUDOKU pSudoku, int* zeroIdxs, int arrMax, int currentPos)
 	}
 	UINT16 validNum = GetValidNumber(pSudoku, zeroIdxs[currentPos]);
 	if (!validNum) {
-		return 1;
+		return -1;
 	}
 	UINT8 start = RandNum(1, 9);
 	for (int i = 1; i <= 9; i++, (start = start % 9 + 1)) {
@@ -34,5 +34,5 @@ static int SolveCell(PSUDOKU pSudoku, int* zeroIdxs, int arrMax, int currentPos)
 		}
 	}
 	UpdateNumber(pSudoku, 0, zeroIdxs[currentPos]);
-	return 1;
+	return -1;
 }

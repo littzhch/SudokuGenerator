@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "SudokuIO.h"
 
-//TRY: ÉèÖÃ´íÎó´úÂë
 
 static inline int HaveRepository(void);
 
