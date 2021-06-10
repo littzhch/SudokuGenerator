@@ -1,111 +1,112 @@
-#include <stdio.h>
-#include <time.h>
-#include <ctype.h>
+#include "cmdinteract.h"
+#include "SudokuIO.h"
 #include "sudoku.h"
 #include "MultiThread.h"
-#include "SudokuIO.h"
+#include <Windows.h>
+//TODO: 更详细的提示
+static inline void CommandClean(_Bool silent);
+static inline void CommandInit(_Bool silent);
+static inline void CommandExport(const char* filepath, _Bool silent);
+static inline void CommandSolve(const char* filepath, int amount, _Bool silent);
+static inline void CommandGenerate(int thread, int amount, _Bool silent);
+static void PrintProgress(int current, int total);
 
-int main1(void) {
-	SUDOKUPUZZLE puzzle;
-	puzzle.clueNum = 25;
-	int i = 5;
-	srand(GetCurrentThreadId());
-	while (i--) {
-		GenerateSudoku(&puzzle);
-		PrintSudoku(&puzzle.problem);
-		puts("-");
-		PrintSudoku(&puzzle.answer);
-		puts("-");
+int main(int argc, char* argv[]) {
+	COMMAND cmd;
+	ReadCommand(&cmd, argc, argv);
+
+	switch (cmd.type) {
+	case TYPE_NONE:
+		PrintWelcome(argv[0]);
+		break;
+	case TYPE_CLEAN:
+		CommandClean(cmd.silent);
+		break;
+	case TYPE_SOLVE:
+		CommandSolve(cmd.filepath, cmd.amount, cmd.silent);
+		break;
+	case TYPE_GENERATE:
+		CommandGenerate(cmd.thread, cmd.amount, cmd.silent);
+		break;
+	case TYPE_INIT:
+		CommandInit(cmd.silent);
+		break;
+	case TYPE_EXPORT:
+		CommandExport(cmd.filepath, cmd.silent);
+		break;
+	case TYPE_HELP:
+		PrintHelp();
+		break;
 	}
-	getchar();
-}
-
-int main2(void) {
-	SUDOKU sudoku = {
-		   {0,0,4,0,0,0,0,0,3,
-			5,0,9,0,0,3,0,6,0,
-			0,0,0,7,6,0,0,0,0,
-			2,0,1,0,0,0,0,0,0,
-			3,0,0,0,9,1,0,4,8,
-			0,4,0,0,3,0,0,1,0,
-			0,0,2,9,1,0,0,0,0,
-			4,0,0,0,8,0,2,0,0,
-			9,5,0,6,0,2,8,3,0},
-
-			30
-
-	};
-	PrintSudoku(&sudoku);
-	SolveSudoku(&sudoku);
-	PrintSudoku(&sudoku);
-} 
-
-void PrintP(int c, int t) {
-	printf("%d/%d\n", c, t);
-}
-
-int main3(void) {
-	SetupRepository();
-	int t1 = time(NULL);
-	PSUDOKUPUZZLE sp = malloc(sizeof(SUDOKUPUZZLE) * 100);
-	GenerateSudokuMT(sp, 100, 31, 31, 16, PrintP);
-	int t2 = time(NULL);
-	printf("%d\n", t2 - t1);
-	AddToRepository(sp, 100);
-	puts("added");
-	ExportRepoAsJson("result.json");
-	free(sp);
-}
-
-int main4(void) {
-	srand(time(NULL));
-	SUDOKUPUZZLE sudokup;
-	sudokup.clueNum = 24;
-	GenerateSudoku(&sudokup);
-	PrintSudoku(&sudokup.problem);
-}
-
-int main5(void) {
-	printf("%zd\n", sizeof(SUDOKUPUZZLE));
-	SetupRepository();
-	SUDOKUPUZZLE puzzles[1000];
-	GenerateSudokuMT(puzzles, 1000, 30, 60, 32, 1);
-	int code = AddToRepository(puzzles, 1000);
-	printf("%d\n", code);
-	
-	printf("%d\n", GetPuzzleAmountInRepository());
 	return 0;
 }
 
-int main(void) {
-	CleanRepository();
-	SUDOKUPUZZLE puzzles[IMPORTBUFFERLEN];
-	int amount;
-	while (1) {
-		amount = ImportPuzzleFromJson(puzzles, "result.json");
-		for (int idx = 0; idx < amount; idx++) {
-			SolveSudoku(puzzles + idx);
-		}
-		AddToRepository(puzzles, amount);
-		if (amount < IMPORTBUFFERLEN) {
-			break;
-		}
+static inline void CommandClean(_Bool silent) {
+	int code = CleanRepository();
+	switch (code) {
+	case 0:
+		return;
+	case 1:
+		WoinExit(WOIN_REPO_NOTEXIST, NULL, "数独题目存储文件不存在，已重新创建", silent);
+	case -1:
+		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", silent);
 	}
-	ExportRepoAsJson("result2.json");
 }
 
-int main7(void) {
-	CleanRepository();
-	SUDOKUPUZZLE puzzles[1000];
-	GenerateSudokuMT(puzzles, 1000, 29, 70, 64, 1);
-	AddToRepository(puzzles, 1000);
-	ExportRepoAsJson("result.json");
-	return 0;
+static inline void CommandInit(_Bool silent) {
+	int code = SetupRepository();
+	switch (code) {
+	case 0:
+		return;
+	case 1:
+		ErrExit(ERR_REPO_EXIST, NULL, "数独题目存储文件已存在", silent);
+	case -1:
+		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法创建数独题目存储文件", silent);
+	}
 }
 
+static inline void CommandExport(const char* filepath, _Bool silent) {
+	int code = ExportRepoAsJson(filepath);
+	switch (code) {
+	case 0:
+		return;
+	case -1:
+		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", silent);
+	case -2:
+		ErrExit(ERR_FILE_CANTOPEN, NULL, "无法打开目标文件", silent);
+	case -3:
+		ErrExit(ERR_REPO_EMPTY, NULL, "数独题目存储文件为空", silent);
+	}
+}
 
-static void PrintProgress(int current, int total) {
-	HANDLE screen = GetStdHandle(STD_OUTPUT_HANDLE);
+static inline void CommandSolve(const char* filepath, int amount, _Bool silent) { //TODO: 完成数独生成
+	if (!silent) {
+		puts("暂未开发");
+	}
+}
+
+static inline void CommandGenerate(int thread, int amount, _Bool silent) { //TODO: 添加提示数输入
+	if (!thread) {
+		thread = 1;
+	}
+	if (!amount) {
+		amount = 1;
+	}
+	void (*InfoProc)(int, int) = NULL;
+	if (!silent) {
+		InfoProc = PrintProgress;
+	}
+	PSUDOKUPUZZLE puzzles = malloc(amount * sizeof(SUDOKUPUZZLE));
+	GenerateSudokuMT(puzzles, amount, 30, 30, thread, InfoProc);
+	int code = AddToRepository(puzzles, amount);
+	free(puzzles);
+	if (code == -1) {
+		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", silent);
+	}
+}
+
+static void PrintProgress(int current, int total) {  //TODO: 为进度条添加绿色背景
+	HANDLE screen = GetStdHandle(STD_OUTPUT_HANDLE); //TODO: 简化计算
 	CONSOLE_SCREEN_BUFFER_INFO screenInfo;
 	GetConsoleScreenBufferInfo(screen, &screenInfo);
 	int maxchar = screenInfo.dwSize.X;
@@ -113,8 +114,13 @@ static void PrintProgress(int current, int total) {
 	int finished = maxbar * current / total;
 	int unfinished = maxbar - finished;
 	int bufferPtr = 0;
-	char buffer[512];
+	static char buffer[512];
+	static first = 1;
 
+	if (first) {
+		puts("进度：");
+		first = 0;
+	}
 	buffer[bufferPtr++] = '\r';
 	buffer[bufferPtr++] = '[';
 	while (finished--) {
@@ -131,9 +137,7 @@ static void PrintProgress(int current, int total) {
 	buffer[bufferPtr] = '\0';
 
 	fputs(buffer, stdout);
-}
-
-int main8(void) {
-	SUDOKUPUZZLE puzzles[1000];
-	GenerateSudokuMT(puzzles, 1000, 30, 30, 64, PrintProgress);
+	if (current == total) {
+		puts("");
+	}
 }
