@@ -156,7 +156,8 @@
   <ItemGroup>
     <ClCompile Include="argument.c" />
     <ClCompile Include="cmdinfo.c" />
-    <ClCompile Include="errexit.c" />
+    <ClCompile Include="entersudoku.c" />
+    <ClCompile Include="errorandwarnning.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>

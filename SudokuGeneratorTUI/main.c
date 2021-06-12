@@ -3,13 +3,15 @@
 #include "sudoku.h"
 #include "MultiThread.h"
 #include <Windows.h>
-//TODO: 更详细的提示
+//TODO: 写文档
+//TODO: 测试
 static inline void CommandClean(_Bool silent);
 static inline void CommandInit(_Bool silent);
 static inline void CommandExport(const char* filepath, _Bool silent);
-static inline void CommandSolve(const char* filepath, int amount, _Bool silent);
-static inline void CommandGenerate(int thread, int amount, _Bool silent);
+static inline void CommandSolve(const char* filepath, _Bool silent);
+static inline void CommandGenerate(COMMAND* pCommand);
 static void PrintProgress(int current, int total);
+
 
 int main(int argc, char* argv[]) {
 	COMMAND cmd;
@@ -23,10 +25,10 @@ int main(int argc, char* argv[]) {
 		CommandClean(cmd.silent);
 		break;
 	case TYPE_SOLVE:
-		CommandSolve(cmd.filepath, cmd.amount, cmd.silent);
+		CommandSolve(cmd.filepath, cmd.silent);
 		break;
 	case TYPE_GENERATE:
-		CommandGenerate(cmd.thread, cmd.amount, cmd.silent);
+		CommandGenerate(&cmd);
 		break;
 	case TYPE_INIT:
 		CommandInit(cmd.silent);
@@ -79,43 +81,76 @@ static inline void CommandExport(const char* filepath, _Bool silent) {
 	}
 }
 
-static inline void CommandSolve(const char* filepath, int amount, _Bool silent) { //TODO: 完成数独生成
-	if (!silent) {
-		puts("暂未开发");
+static inline void CommandSolve(const char* filepath, _Bool silent) {
+	SUDOKUPUZZLE puzzles[IMPORTBUFFERLEN];
+	int num;
+	if (filepath) {
+		while ((num = ImportPuzzleFromJson(puzzles, filepath)) == IMPORTBUFFERLEN) {
+			for (int idx = 0; idx < IMPORTBUFFERLEN; idx++) {
+				if (SolveSudoku(puzzles + idx) == -1) {
+					WarnningInfo("发现一个无解数独");
+				}
+			}
+			AddToRepository(puzzles, IMPORTBUFFERLEN);
+		}
+		if (num == -1) {
+			ErrExit(ERR_FILE_CANTOPEN, NULL, "无法打开目标文件", silent);
+		}
+		else {
+			for (int idx = 0; idx < num; idx++) {
+				if (SolveSudoku(puzzles + idx) == -1) {
+					WarnningInfo("发现一个无解数独");
+				}
+			}
+			AddToRepository(puzzles, num);
+		}
+	}
+	else {
+		if (silent) {
+			return;
+		}
+		num = GetPuzzleFromUser(puzzles);
+		for (int idx = 0; idx < num; idx++) {
+			if (SolveSudoku(puzzles + idx) == -1) {
+				WarnningInfo("发现一个无解数独");
+			}
+		}
+		AddToRepository(puzzles, num);
 	}
 }
 
-static inline void CommandGenerate(int thread, int amount, _Bool silent) { //TODO: 添加提示数输入
-	if (!thread) {
-		thread = 1;
+static inline void CommandGenerate(COMMAND* pCommand) {
+	if (!pCommand->thread) {
+		pCommand->thread = 1;
 	}
-	if (!amount) {
-		amount = 1;
+	if (!pCommand->amount) {
+		pCommand->amount = 1;
 	}
+	if (!pCommand->clue1) {
+		pCommand->clue1 = pCommand->clue2 = 40;
+	}
+
 	void (*InfoProc)(int, int) = NULL;
-	if (!silent) {
+	if (!pCommand->silent) {
 		InfoProc = PrintProgress;
 	}
-	PSUDOKUPUZZLE puzzles = malloc(amount * sizeof(SUDOKUPUZZLE));
-	GenerateSudokuMT(puzzles, amount, 30, 30, thread, InfoProc);
-	int code = AddToRepository(puzzles, amount);
+	PSUDOKUPUZZLE puzzles = malloc(pCommand->amount * sizeof(SUDOKUPUZZLE));
+	GenerateSudokuMT(puzzles, pCommand->amount, pCommand->clue1, pCommand->clue2, pCommand->thread, InfoProc);
+	int code = AddToRepository(puzzles, pCommand->amount);
 	free(puzzles);
 	if (code == -1) {
-		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", silent);
+		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", pCommand->silent);
 	}
 }
 
-static void PrintProgress(int current, int total) {  //TODO: 为进度条添加绿色背景
-	HANDLE screen = GetStdHandle(STD_OUTPUT_HANDLE); //TODO: 简化计算
-	CONSOLE_SCREEN_BUFFER_INFO screenInfo;
-	GetConsoleScreenBufferInfo(screen, &screenInfo);
-	int maxchar = screenInfo.dwSize.X;
-	int maxbar = maxchar * 2 / 3;
+static void PrintProgress(int current, int total) {
+	static const int maxbar = 60;
+	static char buffer[128];
+	static first = 1;
+
 	int finished = maxbar * current / total;
 	int unfinished = maxbar - finished;
 	int bufferPtr = 0;
-	static char buffer[512];
-	static first = 1;
 
 	if (first) {
 		puts("进度：");

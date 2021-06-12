@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <windows.h>
 #include "cmdinteract.h"
 
 
@@ -14,14 +15,14 @@ static char* usage =
 	"选项：\n"
 	"\t-num:    指定生成数独的数量。当操作为generate时可用，默认为1\n"
 	"\t-trd:    指定生成数独时的最大工作线程数。当操作为generate时可用，范围为1~64，默认为1\n"
+	"\t-clue:   指定生成数独的提示数数量。当操作为generate时可用，可以指定一个或两个数字\n"
 	"\t-file:   指定文件路径。当操作为solve或export时可用。若操作为solve，指定需要导入的数独题目所在文件；\n"
 	"\t         若操作为export，指定导出的文件路径和文件名\n"
 	"\t-silent: 不产生命令行输出，任何操作可用\n\n"
 	"详细用法请访问 https://github.com/littzhch/SudokuGenerator\n";
 
 
-static char* GetSelfVersion(void);
-static void DeleteVer(char* ver);
+static char* GetSelfVersion(const char * selfpath);
 
 void PrintHelp(void) {
 	puts(usage);
@@ -29,19 +30,33 @@ void PrintHelp(void) {
 
 
 void PrintWelcome(const char* selfpath) {
-	char* ver = GetSelfVersion();
+	char* ver = GetSelfVersion(selfpath);
 	printf("SudokuGenerator version ");
 	puts(ver);
 	puts("copyright (c) 2021: littzhch");
 	printf("type \"%s help\" for more information\n", selfpath);
-	DeleteVer(ver);
 }
 
 
-static char* GetSelfVersion(void) { //TODO: 完成版本号获取
-	return "0.0.1";
-}
-
-static void DeleteVer(char* ver) {
-	return;
+static char* GetSelfVersion(const char* selfpath) {
+	static char* result[44];
+	UINT16 version[4] = {0, 0, 0, 0};
+	DWORD useless;
+	DWORD size = GetFileVersionInfoSizeA(selfpath, &useless);
+	if (size) {
+		LPVOID pdata = malloc(size);
+		if (pdata != 0) {
+			if (GetFileVersionInfoA(selfpath, 0, size, pdata)) {
+				VS_FIXEDFILEINFO* pInfo;
+				UINT len;
+				if (VerQueryValueA(pdata, "\\", &pInfo, &len)) {
+					*((UINT32*)version) = pInfo->dwProductVersionMS;
+					*((UINT32*)(version + 2)) = pInfo->dwProductVersionLS;
+				}
+			}
+		}
+		free(pdata);
+	}
+	sprintf_s((char* const)result, 44, "%d.%d.%d.%d", version[1], version[0], version[3], version[2]); //字节序
+	return (char*)result;
 }

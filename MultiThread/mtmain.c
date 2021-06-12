@@ -33,26 +33,30 @@ void GenerateSudokuMT(
 		(pPuzzleStart + idx)->clueNum = RandNum(minClue, maxClue);
 	}
 	HANDLE* threadHds = malloc(sizeof(HANDLE) * maxThread);
-	unsigned int threadId;
-	for (int idx = 0; idx < maxThread; idx++) {
-		threadHds[idx] = (HANDLE) _beginthreadex(NULL, 0, WorkThreadProc, NULL, 0, &threadId);
-	}
-
-	if (InfoProgress) {
-		while (puzzlePtr < amount) {
-			InfoProgress(puzzlePtr, amount);
-			Sleep(300);
+	if (threadHds != 0) {
+		ZeroMemory(threadHds, sizeof(HANDLE) * maxThread);
+		for (int idx = 0; idx < maxThread; idx++) {
+			threadHds[idx] = (HANDLE)_beginthreadex(NULL, 0, WorkThreadProc, NULL, 0, NULL);
 		}
-	}
-	WaitForMultipleObjects(maxThread, threadHds, TRUE, INFINITE);
-	if (InfoProgress) {
-		InfoProgress(amount, amount);
-	}
 
-	for (int idx = 0; idx < maxThread; idx++) {
-		CloseHandle(threadHds[idx]);
+		if (InfoProgress) {
+			while (puzzlePtr < amount) {
+				InfoProgress(puzzlePtr, amount);
+				Sleep(300);
+			}
+		}
+		WaitForMultipleObjects(maxThread, threadHds, TRUE, INFINITE);
+		if (InfoProgress) {
+			InfoProgress(amount, amount);
+		}
+
+		for (int idx = 0; idx < maxThread; idx++) {
+			if (threadHds[idx] != 0) {
+				CloseHandle(threadHds[idx]);
+			}
+		}
+		free(threadHds);
 	}
-	free(threadHds);
 	DeleteCriticalSection(&csNext);
 }
 

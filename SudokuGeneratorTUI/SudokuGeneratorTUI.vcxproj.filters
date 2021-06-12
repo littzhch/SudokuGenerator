@@ -24,7 +24,10 @@
     <ClCompile Include="argument.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="errexit.c">
+    <ClCompile Include="errorandwarnning.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="entersudoku.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

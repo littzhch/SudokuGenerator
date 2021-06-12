@@ -30,3 +30,12 @@ _Noreturn WoinExit(int woinType, const char* woinContent, const char* message, _
 	}
 	exit(woinType);
 }
+
+void WarnningInfo(const char* message) {
+	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(output, FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN);
+	printf("Warnning ");
+	SetConsoleTextAttribute(output,
+		FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	puts(message);
+}
