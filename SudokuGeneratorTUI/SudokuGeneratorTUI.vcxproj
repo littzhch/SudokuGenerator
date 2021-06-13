@@ -167,6 +167,9 @@
   <ItemGroup>
     <ResourceCompile Include="SudokuGeneratorTUI.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="sdkg_tui.md" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

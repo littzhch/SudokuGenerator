@@ -68,11 +68,11 @@ BEGIN
         BLOCK "080404b0"
         BEGIN
             VALUE "CompanyName", "littzhch"
-            VALUE "FileDescription", "SudokuGenerator Console"
+            VALUE "FileDescription", "basic sudoku data structure and operations"
             VALUE "FileVersion", "0.0.0.1"
-            VALUE "InternalName", "sdkg.exe"
+            VALUE "InternalName", "sudoku.dll"
             VALUE "LegalCopyright", "Copyright (C) 2021"
-            VALUE "OriginalFilename", "sdkg.exe"
+            VALUE "OriginalFilename", "sudoku.dll"
             VALUE "ProductName", "SudokuGenerator"
             VALUE "ProductVersion", "0.0.0.1"
         END

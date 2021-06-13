@@ -3,8 +3,9 @@
 #include "sudoku.h"
 #include "MultiThread.h"
 #include <Windows.h>
-//TODO: 写文档
-//TODO: 测试
+//TODO: 自动获取文件路径
+//TODO: 测试并解决工作路径问题
+//TODO: 添加版本信息
 static inline void CommandClean(_Bool silent);
 static inline void CommandInit(_Bool silent);
 static inline void CommandExport(const char* filepath, _Bool silent);
@@ -39,6 +40,13 @@ int main(int argc, char* argv[]) {
 	case TYPE_HELP:
 		PrintHelp();
 		break;
+	case TYPE_QUERY:
+		int amount = GetPuzzleAmountInRepository();
+		if (amount == -1) {
+			ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", 0);
+		}
+		printf("当前共有%d道数独题目\n", amount);
+		break;
 	}
 	return 0;
 }
@@ -49,7 +57,10 @@ static inline void CommandClean(_Bool silent) {
 	case 0:
 		return;
 	case 1:
-		WoinExit(WOIN_REPO_NOTEXIST, NULL, "数独题目存储文件不存在，已重新创建", silent);
+		if (!silent) {
+			WarnningInfo("数独题目存储文件不存在，已重新创建");
+		}
+		return;
 	case -1:
 		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", silent);
 	}
@@ -75,7 +86,7 @@ static inline void CommandExport(const char* filepath, _Bool silent) {
 	case -1:
 		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", silent);
 	case -2:
-		ErrExit(ERR_FILE_CANTOPEN, NULL, "无法打开目标文件", silent);
+		ErrExit(ERR_FILE_CANTOPEN, NULL, "无法打开目标文件，可能被占用", silent);
 	case -3:
 		ErrExit(ERR_REPO_EMPTY, NULL, "数独题目存储文件为空", silent);
 	}
@@ -91,7 +102,9 @@ static inline void CommandSolve(const char* filepath, _Bool silent) {
 					WarnningInfo("发现一个无解数独");
 				}
 			}
-			AddToRepository(puzzles, IMPORTBUFFERLEN);
+			if (AddToRepository(puzzles, IMPORTBUFFERLEN)) {
+				ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", silent);
+			}
 		}
 		if (num == -1) {
 			ErrExit(ERR_FILE_CANTOPEN, NULL, "无法打开目标文件", silent);
@@ -102,7 +115,9 @@ static inline void CommandSolve(const char* filepath, _Bool silent) {
 					WarnningInfo("发现一个无解数独");
 				}
 			}
-			AddToRepository(puzzles, num);
+			if (AddToRepository(puzzles, num)) {
+				ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", silent);
+			}
 		}
 	}
 	else {

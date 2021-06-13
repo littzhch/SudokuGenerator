@@ -14,12 +14,13 @@ typedef struct {
 } COMMAND;
 
 // COMMAND.type 宏
-#define TYPE_SOLVE			0b0100011
+#define TYPE_SOLVE			0b0100011     // 后五位从高到低：clue num trd file silent
 #define TYPE_GENERATE		0b0111101
 #define TYPE_INIT			0b0100001
 #define TYPE_CLEAN          0b1100001
 #define TYPE_HELP           0b0100000
 #define TYPE_EXPORT			0b1100011
+#define TYPE_QUERY          0b1100000
 #define TYPE_NONE			0b0000000
 
 void ReadCommand(COMMAND* pCommand, int argc, const char* argv[]);
@@ -42,10 +43,10 @@ void PrintHelp(void);
 #define ERR_REPO_CANTOPEN    2
 #define ERR_REPO_EXIST       3
 #define ERR_REPO_EMPTY       4
-#define WOIN_REPO_NOTEXIST   5
-#define ERR_FILE_CANTOPEN    6
+#define ERR_FILE_CANTOPEN    5
+
 _Noreturn ErrExit(int errType, const char* errContent, const char* message, _Bool silent);
-_Noreturn WoinExit(int woinType, const char* woinContent, const char* message, _Bool silent);
+
 void WarnningInfo(const char* message);
 
 int GetPuzzleFromUser(PSUDOKUPUZZLE puzzles);

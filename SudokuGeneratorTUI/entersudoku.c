@@ -41,20 +41,20 @@ static inline int GetSingleSudoku(PSUDOKUPUZZLE puzzle) {
 }
 
 static inline int GetSingleLine(PSUDOKUPUZZLE puzzle, int line) {
-	UINT8 number;
+	long long int number;
 	printf("第%d行：", line);
 	for (int idx = 1; idx <= 9; idx++) {
-		if (scanf_s("%hhu", &number) != 1) {
+		if (scanf_s("%lld", &number) != 1) {
 			puts("输入有误");
 			Eatline();
 			return 1;
 		}
 		if (number < 0 || number > 9) {
-			printf("%d超出范围\n", number);
+			printf("%lld超出范围\n", number);
 			Eatline();
 			return 1;
 		}
-		UpdateNumber(&puzzle->problem, number, Position(line, idx));
+		UpdateNumber(&puzzle->problem, (UINT8) number, Position(line, idx));
 	}
 	Eatline();
 	return 0;

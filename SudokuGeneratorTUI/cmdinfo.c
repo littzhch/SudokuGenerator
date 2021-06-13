@@ -4,13 +4,14 @@
 
 
 static char* usage = 
-	"用法：\nsdkg <操作> [-num <生成数量>] [-trd <线程数>] [-file <文件路径>] [-silent]\n\n"		  
+	"用法：\nsdkg <操作> [-num <生成数量>] [-trd <线程数>] [-clue <提示数数量>] [-file <文件路径>] [-silent]\n\n"		  
 	"操作：\n\t"
 	  "generate | g: 生成数独\n"
 	"\tsolve | s:    求解数独\n"
 	"\tinit | i:     创建数独存储文件\n"
 	"\tclean | c:    清除所有数独\n"
 	"\texport | e:   导出所有数独\n"
+	"\tquery | q:    查询数独存储文件中的数独题目数量\n"
 	"\thelp | h:     查看帮助\n\n"
 	"选项：\n"
 	"\t-num:    指定生成数独的数量。当操作为generate时可用，默认为1\n"

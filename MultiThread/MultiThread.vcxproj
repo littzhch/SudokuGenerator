@@ -150,9 +150,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MultiThread.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mtmain.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MultiThread.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

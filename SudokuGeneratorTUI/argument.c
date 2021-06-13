@@ -119,6 +119,11 @@ static int ReadOperate(const char* arg) {
 			return TYPE_HELP;
 		}
 		break;
+	case 'q':
+		if ((len == 1) || (!strcmp(arg, "query"))) {
+			return TYPE_QUERY;
+		}
+		break;
 	}
 	ErrExit(ERR_ARG_WRONGFORMAT, arg, "Î´ÖªµÄ²Ù×÷", 0);
 }
