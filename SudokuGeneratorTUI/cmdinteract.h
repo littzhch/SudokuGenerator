@@ -28,7 +28,7 @@ void ReadCommand(COMMAND* pCommand, int argc, const char* argv[]);
 // 若指令错误，报错退出；确保返回的指令格式正确
 
 
-void PrintWelcome(const char* selfpath);
+void PrintWelcome(void);
 // 打印欢迎信息，包括版本号等
 
 void PrintHelp(void);

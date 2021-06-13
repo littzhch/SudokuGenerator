@@ -3,6 +3,16 @@
 
 
 static inline int HaveRepository(void);
+char REPOPATH[512];
+
+void IOInit(void) {
+	int len = GetModuleFileNameA(NULL, REPOPATH, 512);
+	while (REPOPATH[--len] != '\\')
+		;
+	REPOPATH[len + 1] = '\0';
+	strcat_s(REPOPATH, 512, REPONAME);
+}
+
 
 int SetupRepository(void) {
 	if (HaveRepository()) {
@@ -11,7 +21,7 @@ int SetupRepository(void) {
 
 	int code;
 	FILE* file;
-	code = fopen_s(&file, REPONAME, "wb");
+	code = fopen_s(&file, REPOPATH, "wb");
 	if (code) {
 		return -1;
 	}
@@ -32,7 +42,7 @@ int CleanRepository(void) {
 	}
 	
 	FILE* file;
-	code = fopen_s(&file, REPONAME, "wb");
+	code = fopen_s(&file, REPOPATH, "wb");
 	if (code) {
 		return -1;
 	}
@@ -46,7 +56,7 @@ int CleanRepository(void) {
 int GetPuzzleAmountInRepository(void) {
 	FILE* file;
 	int code;
-	code = fopen_s(&file, REPONAME, "rb");
+	code = fopen_s(&file, REPOPATH, "rb");
 	if (code) {
 		return -1;
 	}
@@ -61,7 +71,7 @@ int AddToRepository(const PSUDOKUPUZZLE puzzles, int amount) {  //TRY: Ê¹ÓÃ¸ü¸ßÐ
 	FILE* file;
 	int code;
 
-	code = fopen_s(&file, REPONAME, "rb+");
+	code = fopen_s(&file, REPOPATH, "rb+");
 	if (code) {
 		return -1;
 	}
@@ -82,7 +92,7 @@ int AddToRepository(const PSUDOKUPUZZLE puzzles, int amount) {  //TRY: Ê¹ÓÃ¸ü¸ßÐ
 static inline int HaveRepository(void) {
 	FILE* file;
 	int code;
-	code = fopen_s(&file, REPONAME, "rb");
+	code = fopen_s(&file, REPOPATH, "rb");
 	if (! code) {
 		fclose(file);
 		return 1;

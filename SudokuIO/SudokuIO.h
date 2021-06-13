@@ -9,6 +9,10 @@
 #define REPONAME "sudoku.repo"
 #define IMPORTBUFFERLEN 64
 
+SUDOKUIO_API void IOInit(void);
+// 初始化模块，在调用其它函数前必须调用
+
+
 SUDOKUIO_API int SetupRepository(void);
 // 创建存储库，若成功，返回0；若已存在存储库，返回1；若失败，返回-1
 

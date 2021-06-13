@@ -10,14 +10,14 @@ static void PrintNumbers(PSUDOKU pSudoku, FILE* file);
 static int ReadSingleSudoku(PSUDOKUPUZZLE pPuzzle, FILE* file);
 // 从json格式文件中读取一个数独题目。成功返回0；若读到EOF，返回EOF
 static inline void EatBlank(FILE* file);
-
+extern char REPOPATH[];
 
 int ExportRepoAsJson(const char* filepath) {
 	FILE* repo;
 	FILE* target;
 	int code;
 
-	code = fopen_s(&repo, REPONAME, "rb");
+	code = fopen_s(&repo, REPOPATH, "rb");
 	if (code) {
 		return -1;
 	}

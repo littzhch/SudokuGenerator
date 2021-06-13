@@ -19,18 +19,20 @@ static char* usage =
 	"\t-clue:   指定生成数独的提示数数量。当操作为generate时可用，可以指定一个或两个数字\n"
 	"\t-file:   指定文件路径。当操作为solve或export时可用。若操作为solve，指定需要导入的数独题目所在文件；\n"
 	"\t         若操作为export，指定导出的文件路径和文件名\n"
-	"\t-silent: 不产生命令行输出，任何操作可用\n\n"
+	"\t-silent: 不产生命令行输出，除help外任何操作可用\n\n"
 	"详细用法请访问 https://github.com/littzhch/SudokuGenerator\n";
 
 
-static char* GetSelfVersion(const char * selfpath);
+static inline char* GetSelfVersion(const char* selfpath);
+static inline char* GetSelfFilePath(void);
 
 void PrintHelp(void) {
 	puts(usage);
 }
 
 
-void PrintWelcome(const char* selfpath) {
+void PrintWelcome(void) {
+	char* selfpath = GetSelfFilePath();
 	char* ver = GetSelfVersion(selfpath);
 	printf("SudokuGenerator version ");
 	puts(ver);
@@ -39,7 +41,7 @@ void PrintWelcome(const char* selfpath) {
 }
 
 
-static char* GetSelfVersion(const char* selfpath) {
+static inline char* GetSelfVersion(const char* selfpath) {
 	static char* result[44];
 	UINT16 version[4] = {0, 0, 0, 0};
 	DWORD useless;
@@ -60,4 +62,10 @@ static char* GetSelfVersion(const char* selfpath) {
 	}
 	sprintf_s((char* const)result, 44, "%d.%d.%d.%d", version[1], version[0], version[3], version[2]); //字节序
 	return (char*)result;
+}
+
+static inline char* GetSelfFilePath(void) {
+	static char* selfpath[512] = {0};
+	GetModuleFileNameA(NULL, selfpath, 512);
+	return selfpath;
 }

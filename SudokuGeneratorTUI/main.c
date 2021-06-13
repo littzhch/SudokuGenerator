@@ -15,12 +15,13 @@ static void PrintProgress(int current, int total);
 
 
 int main(int argc, char* argv[]) {
+	IOInit();
 	COMMAND cmd;
 	ReadCommand(&cmd, argc, argv);
 
 	switch (cmd.type) {
 	case TYPE_NONE:
-		PrintWelcome(argv[0]);
+		PrintWelcome();
 		break;
 	case TYPE_CLEAN:
 		CommandClean(cmd.silent);
