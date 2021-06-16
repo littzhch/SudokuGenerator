@@ -93,6 +93,157 @@ END
 // remains consistent on all systems.
 IDI_ICON1               ICON                    "icon.ico"
 
+IDI_ICON2               ICON                    "chest150.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG2 DIALOGEX 0, 0, 324, 68
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "进度"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_PROGRESS1,"msctls_progress32",PBS_SMOOTH,24,30,276,14
+    LTEXT           "",IDC_STATIC_TEXT,26,14,115,8
+END
+
+IDD_DIALOG1 DIALOGEX 0, 0, 162, 156
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    ICON            "",IDC_PICT,70,23,20,20
+    LTEXT           "Sudoku Generator",IDC_STATIC,48,53,62,8
+    LTEXT           "author: littzhch",IDC_STATIC,50,86,52,8
+    PUSHBUTTON      "报告bug",IDC_BUTTON_REPORT,53,119,50,14
+    LTEXT           "数独生成器",IDC_STATIC,59,64,40,8
+    LTEXT           "版本",IDC_STATIC,47,75,16,8
+    LTEXT           "0.0.0.0",IDC_TEXT,73,76,59,8
+END
+
+IDD_DIALOG3 DIALOGEX 0, 0, 142, 162
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",BTOK,26,141,50,14
+    PUSHBUTTON      "取消",BTCANCEL,85,141,50,14
+    EDITTEXT        IDC_EDIT1,53,33,40,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT2,38,53,40,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT3,84,53,40,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT4,50,76,40,12,ES_AUTOHSCROLL | ES_NUMBER
+END
+
+IDD_DIALOG4 DIALOGEX 0, 0, 310, 265
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "输入数独"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",BTOK,193,244,50,14
+    PUSHBUTTON      "取消",BTCANCEL,253,244,50,14
+    EDITTEXT        IDC_EDIT_L1,118,23,139,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_L2,118,44,139,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_L3,119,66,139,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_L4,118,85,139,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_L5,117,104,139,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_L6,116,122,139,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_L7,117,142,139,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_L8,116,160,139,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_L9,116,179,139,12,ES_AUTOHSCROLL | ES_NUMBER
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DIALOG2, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 317
+        TOPMARGIN, 5
+        BOTTOMMARGIN, 61
+    END
+
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 154
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 149
+    END
+
+    IDD_DIALOG3, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 135
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 155
+    END
+
+    IDD_DIALOG4, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 303
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 258
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU1 MENU
+BEGIN
+    POPUP "数独"
+    BEGIN
+        MENUITEM "生成",                          ID_MENU_GENERATE
+        POPUP "求解"
+        BEGIN
+            MENUITEM "输入数独",                        ID_MENU_ENTER
+            MENUITEM "从文件中导入",                      ID_MENU_FROMFILE
+        END
+    END
+    POPUP "存储库"
+    BEGIN
+        MENUITEM "导出",                          ID_MENU_EXPORT
+        MENUITEM "清除",                          ID_MENU_DEL
+    END
+    MENUITEM "关于",                          ID_MENU_ABOUT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DIALOG3 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DIALOG1 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DIALOG4 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
 #endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
 

@@ -138,6 +138,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ComCtl32.lib;version.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableDpiAwareness>true</EnableDpiAwareness>
@@ -155,15 +156,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="aboutdialog.c" />
+    <ClCompile Include="enterdialog.c" />
+    <ClCompile Include="fileselect.c" />
+    <ClCompile Include="generatedialog.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="progressdialog.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="aboutdialog.h" />
+    <ClInclude Include="enterdialog.h" />
+    <ClInclude Include="fileselect.h" />
+    <ClInclude Include="generatedialog.h" />
+    <ClInclude Include="progressdialog.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SudokuGeneratorGUI.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="chest150.ico" />
     <Image Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
