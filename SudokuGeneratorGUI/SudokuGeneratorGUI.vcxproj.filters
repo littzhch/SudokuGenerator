@@ -38,19 +38,7 @@
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="progressdialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="fileselect.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="generatedialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="aboutdialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="enterdialog.h">
+    <ClInclude Include="dialogs.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

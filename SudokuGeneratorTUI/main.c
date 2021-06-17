@@ -3,9 +3,7 @@
 #include "sudoku.h"
 #include "MultiThread.h"
 #include <Windows.h>
-//TODO: 自动获取文件路径
-//TODO: 测试并解决工作路径问题
-//TODO: 添加版本信息
+
 static inline void CommandClean(_Bool silent);
 static inline void CommandInit(_Bool silent);
 static inline void CommandExport(const char* filepath, _Bool silent);

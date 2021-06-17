@@ -1,19 +1,20 @@
-#include "generatedialog.h"
-#include "multithread.h"
 #include <stdio.h>
+#include "dialogs.h"
+#include "multithread.h"
+#include "resource.h"
 
 static BOOL CALLBACK generate(HWND hDlg, UINT msgType, WPARAM wParam, LPARAM lParam);
 
 extern HWND hWnd;
 extern HINSTANCE hIns;
-static char lastAmount[32] = "";
-static char lastClueLeft[32] = "";
-static char lastClueRight[32] = "";
-static char lastThread[32] = "";
+static char lastAmount[32] = "1";
+static char lastClueLeft[32] = "40";
+static char lastClueRight[32] = "40";
+static char lastThread[32] = "1";
 
 static struct gInfo* pInfo;
 
-void AskForSettings(struct gInfo* info) {
+void DLG_AskForSettings(struct gInfo* info) {
 	pInfo = info;
 	ZeroMemory(info, sizeof(struct gInfo));
 	DialogBoxW(hIns, IDD_DIALOG3, hWnd, generate);

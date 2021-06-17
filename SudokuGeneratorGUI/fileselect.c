@@ -1,13 +1,12 @@
-#include "fileselect.h"
+#include "dialogs.h"
 
 IShellItem* pItem = NULL;
 
-void InitFileService(void) {
+void DLG_InitFileService(void) {
 	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-
 }
 
-void GetOpenFilePath(PWSTR* path) {
+void DLG_GetOpenFilePath(PWSTR* path) {
 	IFileOpenDialog* pFileOpen;
 	if (pItem)
 		pItem->lpVtbl->Release(pItem);
@@ -27,7 +26,7 @@ void GetOpenFilePath(PWSTR* path) {
 }
 
 
-void GetWriteFilePath(PWSTR* path) {
+void DLG_GetWriteFilePath(PWSTR* path) {
 	IFileSaveDialog* pFileSave;
 	if (pItem)
 		pItem->lpVtbl->Release(pItem);
@@ -47,7 +46,7 @@ void GetWriteFilePath(PWSTR* path) {
 	}
 }
 
-void UninitFileService(void) {
+void DLG_UninitFileService(void) {
 	if (pItem)
 		pItem->lpVtbl->Release(pItem);
 	CoUninitialize();

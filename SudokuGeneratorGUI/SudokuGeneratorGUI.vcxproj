@@ -132,6 +132,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
+      <DisableSpecificWarnings>5105;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -164,11 +165,7 @@
     <ClCompile Include="progressdialog.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aboutdialog.h" />
-    <ClInclude Include="enterdialog.h" />
-    <ClInclude Include="fileselect.h" />
-    <ClInclude Include="generatedialog.h" />
-    <ClInclude Include="progressdialog.h" />
+    <ClInclude Include="dialogs.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

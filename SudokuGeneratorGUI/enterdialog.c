@@ -1,4 +1,4 @@
-#include "enterdialog.h"
+#include "dialogs.h"
 #include "resource.h"
 
 extern HINSTANCE hIns;
@@ -9,7 +9,7 @@ static BOOL CALLBACK enter(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lPa
 static char lines[9][16];
 static PSUDOKUPUZZLE puzzle;
 
-int GetSudokuProblem(PSUDOKUPUZZLE pPuzzle) {
+int DLG_GetSudokuProblem(PSUDOKUPUZZLE pPuzzle) {
 	puzzle = pPuzzle;
 	return DialogBoxA(hIns, IDD_DIALOG4, hWnd, enter);
 }

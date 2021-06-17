@@ -1,4 +1,4 @@
-#include "aboutdialog.h"
+#include "dialogs.h"
 #include "resource.h"
 
 extern HINSTANCE hIns;
@@ -6,15 +6,15 @@ extern HWND hWnd;
 static BOOL CALLBACK about(HWND hDlg, UINT msgType, WPARAM wParam, LPARAM lParam);
 static inline char* GetSelfVersion(void);
 
-void ShowAboutWindow(void) {
-	DialogBoxA(hIns, IDD_DIALOG1, hWnd, about);
+void DLG_ShowAboutWindow(void) {
+	DialogBoxA(hIns, (LPCSTR) IDD_DIALOG1, hWnd, (DLGPROC) about);
 }
 
 static BOOL CALLBACK about(HWND hDlg, UINT msgType, WPARAM wParam, LPARAM lParam) {
 	switch (msgType) {
 	case WM_INITDIALOG:
 		SendDlgItemMessageW(hDlg, IDC_PICT, STM_SETIMAGE, IMAGE_ICON, 
-			LoadIconA(hIns, MAKEINTRESOURCEA(IDI_ICON1)));
+			(LPARAM) LoadIconA(hIns, MAKEINTRESOURCEA(IDI_ICON1)));
 		SetDlgItemTextA(hDlg, IDC_TEXT, GetSelfVersion());
 		return TRUE;
 	case WM_COMMAND:
@@ -34,14 +34,14 @@ static inline char* GetSelfVersion(void) {
 	static char* selfpath[512] = { 0 };
 	static char* result[44];
 
-	GetModuleFileNameA(NULL, selfpath, 512);
+	GetModuleFileNameA(NULL, (LPSTR) selfpath, 512);
 	UINT16 version[4] = { 0, 0, 0, 0 };
 	DWORD useless;
-	DWORD size = GetFileVersionInfoSizeA(selfpath, &useless);
+	DWORD size = GetFileVersionInfoSizeA((LPCSTR) selfpath, (LPDWORD) &useless);
 	if (size) {
 		LPVOID pdata = malloc(size);
 		if (pdata != 0) {
-			if (GetFileVersionInfoA(selfpath, 0, size, pdata)) {
+			if (GetFileVersionInfoA((LPCSTR)selfpath, (DWORD)0, (DWORD)size, (LPVOID)pdata)) {
 				VS_FIXEDFILEINFO* pInfo;
 				UINT len;
 				if (VerQueryValueA(pdata, "\\", &pInfo, &len)) {

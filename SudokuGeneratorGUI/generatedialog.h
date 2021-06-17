@@ -10,5 +10,5 @@ struct gInfo {
 	int trd;
 };
 
-void AskForSettings(struct gInfo* info);
+void DLG_AskForSettings(struct gInfo* info);
 // 询问设置，若info->num == 0，则代表用户取消了设置
