@@ -32,7 +32,7 @@ int ExportRepoAsJson(const char* filepath) {
 		fclose(repo);
 		return -2;
 	}
-
+	
 	PrintHeader(num, target);
 	SUDOKUPUZZLE puzzleBuffer;
 	num--;

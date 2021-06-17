@@ -15,4 +15,6 @@ void PopUpProgress(int wndType, wchar_t* text);
 void SetProgress(int current, int total);
 // 设置当前进度，当 current == total 时自动关闭
 
+void ChangeTextW(wchar_t* text);
+
 void StopProgress(void);

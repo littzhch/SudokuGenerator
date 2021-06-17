@@ -35,6 +35,7 @@ static BOOL CALLBACK enter(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lPa
 			SendDlgItemMessageA(hwndDlg, IDC_EDIT_L9, EM_GETLINE, 0, lines[8]);
 			
 			for (int line = 0; line < 9; line++) {
+				
 				for (int c = 0; c < 9; c++) {
 					if (lines[line][c] == '\0') {
 						MessageBoxA(hwndDlg, "输入的数字过少", "错误", MB_ICONERROR | MB_OK);

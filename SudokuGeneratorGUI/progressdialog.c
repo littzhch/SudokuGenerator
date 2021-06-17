@@ -21,8 +21,12 @@ void SetProgress(int current, int total) {
 	SendMessageW(hDlg, WM_UPDATEPROGRESS, current, total);
 }
 
+void ChangeTextW(wchar_t* text) {
+	SetDlgItemTextW(hDlg, IDC_STATIC_TEXT, text);
+}
+
 void StopProgress(void) {
-	EndDialog(hDlg, 0);
+	while (!EndDialog(hDlg, 0));
 }
 
 static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) {
