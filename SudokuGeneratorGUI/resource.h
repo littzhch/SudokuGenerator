@@ -15,6 +15,7 @@
 #define IDC_EDIT_NUM                    1041
 #define IDC_STATIC_TEXT                 1042
 #define IDC_STATIC_TEXT1                1042
+#define IDC_STATIC_TEXT2                1043
 #define IDC_PICT                        1046
 #define BTOK                            1052
 #define BTCANCEL                        1053
@@ -25,7 +26,6 @@
 #define IDC_TEXT                        1056
 #define IDC_EDIT4                       1057
 #define IDC_EDIT_L1                     1058
-#define IDC_BUTTON1                     1061
 #define IDC_EDIT_L2                     1066
 #define IDC_EDIT_L3                     1067
 #define IDC_EDIT_L4                     1068
@@ -45,7 +45,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        121
+#define _APS_NEXT_RESOURCE_VALUE        122
 #define _APS_NEXT_COMMAND_VALUE         40014
 #define _APS_NEXT_CONTROL_VALUE         1062
 #define _APS_NEXT_SYMED_VALUE           101

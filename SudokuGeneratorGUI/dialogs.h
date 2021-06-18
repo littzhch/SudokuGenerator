@@ -48,14 +48,17 @@ void DLG_AskForSettings(struct gInfo* info);
 #define WNDTYPE_MARQUEE               1
 #define WM_UPDATEPROGRESS  (WM_USER + 1)
 
-void DLG_PopUpProgress(int wndType, wchar_t* text);
+void DLG_PopUpProgress(int wndType, wchar_t* leftText);
 // 弹出进度窗口
 
 void DLG_SetProgress(int current, int total);
 // 设置当前进度
 
-void DLG_ChangeTextW(wchar_t* text);
-// 改变进度窗口中的文字
+void DLG_ChangeTextWL(wchar_t* text);
+// 改变进度窗口中的左侧文字
+
+void DLG_ChangeTextWR(wchar_t* text);
+// 改变进度窗口中的右侧文字
 
 void DLG_StopProgress(void);
 // 关闭进度窗口

@@ -107,7 +107,8 @@ CAPTION "进度"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     CONTROL         "",IDC_PROGRESS1,"msctls_progress32",PBS_SMOOTH,24,30,276,14
-    LTEXT           "",IDC_STATIC_TEXT,26,14,184,8
+    LTEXT           "",IDC_STATIC_TEXT,26,14,158,8
+    RTEXT           "",IDC_STATIC_TEXT2,198,14,101,8
 END
 
 IDD_DIALOG1 DIALOGEX 0, 0, 194, 158
@@ -116,12 +117,12 @@ CAPTION "关于"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     ICON            "",IDC_PICT,85,14,20,20
-    CTEXT           "Sudoku Generator",IDC_STATIC,43,36,109,8
-    LTEXT           "作者      littzhch",IDC_STATIC,72,72,89,8
+    CTEXT           "Sudoku Generator",IDC_STATIC,43,40,109,8
+    LTEXT           "作者      littzhch",IDC_STATIC,72,81,89,8
     PUSHBUTTON      "报告bug",IDC_BUTTON_REPORT,74,115,50,14
-    CTEXT           "数独生成器",IDC_STATIC,53,48,87,8
-    LTEXT           "版本",IDC_STATIC,72,60,31,8
-    LTEXT           "0.0.0.0",IDC_TEXT,102,60,59,8
+    CTEXT           "数独生成器",IDC_STATIC,53,53,87,8
+    LTEXT           "版本",IDC_STATIC,72,67,31,8
+    LTEXT           "0.0.0.0",IDC_TEXT,102,67,59,8
 END
 
 IDD_DIALOG3 DIALOGEX 0, 0, 160, 186

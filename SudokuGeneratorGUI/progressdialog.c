@@ -22,8 +22,12 @@ void DLG_SetProgress(int current, int total) {
 	SendMessageW(hDlg, WM_UPDATEPROGRESS, current, total);
 }
 
-void DLG_ChangeTextW(wchar_t* text) {
+void DLG_ChangeTextWL(wchar_t* text) {
 	while(! SetDlgItemTextW(hDlg, IDC_STATIC_TEXT, text));
+}
+
+void DLG_ChangeTextWR(wchar_t* text) {
+	while (!SetDlgItemTextW(hDlg, IDC_STATIC_TEXT2, text));
 }
 
 void DLG_StopProgress(void) {

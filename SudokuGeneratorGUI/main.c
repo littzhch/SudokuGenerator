@@ -1,16 +1,18 @@
 ﻿#include <windowsx.h>
 #include <stdio.h>
 #include <process.h>
-#include <stdlib.h>
+#include <windows.h>
 #include "dialogs.h"
 #include "resource.h"
-#include "SudokuIO.h"
-#include "multithread.h"
+#include "menu.h"
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
+//TODO: 拆分menu处理
+//TODO: 统一UpdateRepoNum()调用时机
+//TODO: 支持只输入一个提示数
 
 HINSTANCE hIns;
 HWND hWnd;
@@ -22,13 +24,8 @@ static inline void FillRects(RECT* result);
 static inline void SetupMainWindowContent(void);
 static inline void RegisterWindowClass(void);
 static inline void UpdateChildPos(void);
-static void GenerateThreadProc(void* arg);
-static void FileDropProc(void* arg);
-static void SolveProc(void* arg);
 static inline void UpdateRepoNum(void);
-static inline int ImportAllFromFile(const char* filepath);
-static inline void ReactToMenuClick(int menuItem);
-static inline char* W2A(wchar_t* source);
+static void FileDropProc(void* arg);
 static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msgType, WPARAM wParam, LPARAM lParam);
 
 
@@ -90,6 +87,7 @@ static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msgType, WPARAM wParam, LPAR
 
 	case WM_COMMAND:
 		ReactToMenuClick(LOWORD(wParam));
+		UpdateRepoNum();
 		return 0;
 
 	case WM_PAINT:
@@ -109,59 +107,7 @@ static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msgType, WPARAM wParam, LPAR
 	return DefWindowProcW(hwnd, msgType, wParam, lParam);
 }
 
-static void ExportThreadProc(void* arg) {
-	char* path = (char*)arg;
-	switch (ExportRepoAsJson(W2A(path))) {
-	case 0:
-		DLG_StopProgress();
-		break;
-	case -1:
-		DLG_StopProgress();
-		MessageBoxA(hWnd, "无法打开数独存储文件，可能不存在或被占用", "错误", MB_OK | MB_ICONERROR);
-		break;
-	case -2:
-		DLG_StopProgress();
-		MessageBoxA(hWnd, "无法打开目标文件", "错误", MB_OK | MB_ICONERROR);
-		break;
-	}
-}
 
-static void GenerateThreadProc(void* arg) {
-	struct gInfo* info = (struct gInfo*)arg;
-	PSUDOKUPUZZLE puzzles = malloc(info->num * sizeof(SUDOKUPUZZLE));
-	if (puzzles != NULL) {
-		GenerateSudokuMT(puzzles, info->num, info->clue1, info->clue2, info->trd, DLG_SetProgress);
-		AddToRepository(puzzles, info->num);
-		free(puzzles);
-		UpdateRepoNum();
-		Sleep(800);
-		DLG_StopProgress();
-	}
-}
-
-
-static void SolveProc(void* arg) {
-	char* filepath = (char*)arg;
-	switch (ImportAllFromFile(filepath)) {
-	case 0:
-		DLG_StopProgress();
-		break;
-	case -1:
-		DLG_StopProgress();
-		MessageBoxA(hWnd, "无法打开数独存储文件，可能不存在或被占用", "错误", MB_OK | MB_ICONERROR);
-		break;
-	case -2:
-		DLG_StopProgress();
-		MessageBoxA(hWnd, "无法打开目标文件", "错误", MB_OK | MB_ICONERROR);
-		break;
-	}
-}
-
-static void ChangeTextProc(void* arg) {
-	DLG_ChangeTextW(L"发现无解数独");
-	Sleep(2000);
-	DLG_ChangeTextW(L"正在读取...");
-}
 
 static inline void RegisterWindowClass(void) {
 	WNDCLASS wc = { 0 };
@@ -232,125 +178,13 @@ static inline void SetupMainWindowContent(void) {
 	UpdateChildPos();
 }
 
-static inline char* W2A(wchar_t* source) {
-	static char result[256];
-	size_t num;
-	wcstombs_s(&num, result, 256, source, 255);
-	return result;
-}
-
-static inline int ImportAllFromFile(const char* filepath) {
-	BOOL changed = FALSE;
-	SUDOKUPUZZLE puzzles[IMPORTBUFFERLEN];
-	int num;
-	while ((num = ImportPuzzleFromJson(puzzles, filepath)) == IMPORTBUFFERLEN) {
-		for (int idx = 0; idx < IMPORTBUFFERLEN; idx++) {
-			if (SolveSudoku(puzzles + idx) == -1) {
-				if (!changed) {
-					_beginthread(ChangeTextProc, 0, NULL);
-					changed = TRUE;
-				}
-			}
-		}
-		if (AddToRepository(puzzles, IMPORTBUFFERLEN)) {
-			return -1; // 无法打开数独存储
-		}
-	}
-	if (num == -1) {
-		return -2; // 无法打开目标文件
-	}
-	else {
-		for (int idx = 0; idx < num; idx++) {
-			if (SolveSudoku(puzzles + idx) == -1) {
-				if (!changed) {
-					_beginthread(ChangeTextProc, 0, NULL);
-				}
-			}
-		}
-		if (AddToRepository(puzzles, num)) {
-			return -1;
-		}
-	}
-	return 0;
-}
-
-static inline void ReactToMenuClick(int menuItem) {
-	struct gInfo info;
-	wchar_t* path;
-
-	switch (menuItem) {
-
-	case ID_MENU_ABOUT:
-		DLG_ShowAboutWindow();
-		break;
-
-	case ID_MENU_GENERATE:
-		DLG_AskForSettings(&info);
-		if (info.num) {
-			_beginthread(GenerateThreadProc, 0, &info);
-			DLG_PopUpProgress(WNDTYPE_NORMAL, L"正在生成...");
-		}
-		break;
-
-	case ID_MENU_DEL:
-		if (GetPuzzleAmountInRepository() == 0) {
-			MessageBoxA(hWnd, "题目数量已经为0", "错误",
-				MB_OK | MB_ICONERROR);
-			break;
-		}
-		if (MessageBoxA(hWnd, "所有题目将被清空，确定要继续吗？", "警告",
-			MB_OKCANCEL | MB_ICONWARNING) == IDOK) {
-			CleanRepository();
-			UpdateRepoNum();
-		}
-		break;
-
-	case ID_MENU_EXPORT:
-		if (GetPuzzleAmountInRepository() == 0) {
-			MessageBoxA(hWnd, "题目数量为0", "错误",
-				MB_OK | MB_ICONERROR);
-			break;
-		}
-		DLG_GetWriteFilePath(&path);
-		if (path) {
-			_beginthread(ExportThreadProc, 0, (void*)path);
-			DLG_PopUpProgress(WNDTYPE_MARQUEE, L"正在导出...");
-		}
-		break;
-
-	case ID_MENU_ENTER:
-		SUDOKUPUZZLE sp;
-		if (DLG_GetSudokuProblem(&sp)) {
-			switch (SolveSudoku(&sp)) {
-			case 0:
-				AddToRepository(&sp, 1);
-				UpdateRepoNum();
-				MessageBoxA(hWnd, "题目已加入存储库中", "求解完成", MB_OK);  //TODO: 使用更严格的数独正确性检查
-				break;
-			case -1:
-				MessageBoxA(hWnd, "题目无解", "错误", MB_OK | MB_ICONERROR);
-				break;
-			}
-		}
-		break;
-
-	case ID_MENU_FROMFILE:
-		DLG_GetOpenFilePath(&path);
-		if (path) {
-			_beginthread(SolveProc, 0, (void*)W2A(path));
-			DLG_PopUpProgress(WNDTYPE_MARQUEE, L"正在读取...");
-		}
-		UpdateRepoNum();
-		break;
-	}
-}
-
 
 static void FileDropProc(void* arg) {
 	HDROP hDrop = (HDROP)arg;
 	char filepath[512];
 	wchar_t text[40];
 	size_t strsize;
+	int noAnswerCount = 0;
 
 	int amount = DragQueryFileA(hDrop, (UINT)0xFFFFFFFF, NULL, 0);
 	for (int idx = 0; idx < amount; idx++) {
@@ -362,21 +196,22 @@ static void FileDropProc(void* arg) {
 		DragQueryFileA(hDrop, idx, filepath, 512);
 
 		swprintf_s(text, 40, L"正在读取...   文件 %d/%d", idx + 1, amount);
-		DLG_ChangeTextW(text);
-		switch (ImportAllFromFile(filepath)) {
+		DLG_ChangeTextWL(text);
+		switch (ImportAllFromFile(filepath, &noAnswerCount)) {
 		case -1:
 			DLG_StopProgress();
 			MessageBoxA(hWnd, "无法打开数独存储文件，可能不存在或被占用", "错误", MB_OK | MB_ICONERROR);
 			return;
 		case -2:
 			swprintf_s(text, 40, L"无法打开文件 %d", idx + 1);
-			DLG_ChangeTextW(text);
-			Sleep(1000);
+			DLG_ChangeTextWL(text);
+			Sleep(700);
 			break;
 		}
 	}
 	DLG_StopProgress();
 }
+
 
 /*
 char num[10];

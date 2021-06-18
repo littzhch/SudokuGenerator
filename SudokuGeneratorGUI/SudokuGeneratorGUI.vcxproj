@@ -162,10 +162,12 @@
     <ClCompile Include="fileselect.c" />
     <ClCompile Include="generatedialog.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="menu.c" />
     <ClCompile Include="progressdialog.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dialogs.h" />
+    <ClInclude Include="menu.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
