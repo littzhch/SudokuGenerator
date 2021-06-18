@@ -8,6 +8,9 @@
 #include <windows.h>
 
 #define Position(row, col)     (9 * (row)  + (col) - 10)		// 将行数和列数转换为位置索引值
+#define GetRow(idx)			   ((idx) / 9 + 1)					// 1-9
+#define GetCol(idx)			   ((idx) % 9 + 1)					// 1-9
+#define GetBlock(idx)          (((GetRow(idx) - 1) / 3) * 3 + ((GetCol(idx) - 1) / 3) + 1) // 1-9
 #define IsValid(bits, number)  (((bits) >> (number)) & 1)		// bits为GetValidNumber()的返回值，number为需要检验的数字
 #define RandNum(min, max)      ((UINT8) (rand() % ((max) - (min) + 1) + (min)))	// 返回[min, max]区间内的一个随机整数
 
