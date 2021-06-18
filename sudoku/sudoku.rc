@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,0,0,1
- PRODUCTVERSION 0,0,0,1
+ FILEVERSION 0,1,0,0
+ PRODUCTVERSION 0,1,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,12 +69,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "littzhch"
             VALUE "FileDescription", "basic sudoku data structure and operations"
-            VALUE "FileVersion", "0.0.0.1"
+            VALUE "FileVersion", "0.1.0.0"
             VALUE "InternalName", "sudoku.dll"
             VALUE "LegalCopyright", "Copyright (C) 2021"
             VALUE "OriginalFilename", "sudoku.dll"
             VALUE "ProductName", "SudokuGenerator"
-            VALUE "ProductVersion", "0.0.0.1"
+            VALUE "ProductVersion", "0.1.0.0"
         END
     END
     BLOCK "VarFileInfo"

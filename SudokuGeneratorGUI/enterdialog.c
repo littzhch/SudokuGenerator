@@ -14,7 +14,7 @@ int DLG_GetSudokuProblem(PSUDOKUPUZZLE pPuzzle) {
 	return DialogBoxA(hIns, IDD_DIALOG4, hWnd, enter);
 }
 
-static BOOL CALLBACK enter(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+static BOOL CALLBACK enter(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) { //TODO: 提供切换行的快速方式
 	switch (message) {
 	case WM_INITDIALOG:
 		return TRUE;
@@ -33,9 +33,8 @@ static BOOL CALLBACK enter(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lPa
 			SendDlgItemMessageA(hwndDlg, IDC_EDIT_L7, EM_GETLINE, 0, lines[6]);
 			SendDlgItemMessageA(hwndDlg, IDC_EDIT_L8, EM_GETLINE, 0, lines[7]);
 			SendDlgItemMessageA(hwndDlg, IDC_EDIT_L9, EM_GETLINE, 0, lines[8]);
-			
+			SuInitialize(&puzzle->problem);
 			for (int line = 0; line < 9; line++) {
-				
 				for (int c = 0; c < 9; c++) {
 					if (lines[line][c] == '\0') {
 						MessageBoxA(hwndDlg, "输入的数字过少", "错误", MB_ICONERROR | MB_OK);

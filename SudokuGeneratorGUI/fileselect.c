@@ -26,7 +26,7 @@ void DLG_GetOpenFilePath(PWSTR* path) {
 }
 
 
-void DLG_GetWriteFilePath(PWSTR* path) {
+void DLG_GetWriteFilePath(PWSTR* path) { //TODO: 提供选择文件类型和自动添加后缀名的功能
 	IFileSaveDialog* pFileSave;
 	if (pItem)
 		pItem->lpVtbl->Release(pItem);

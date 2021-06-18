@@ -23,7 +23,7 @@ void DLG_SetProgress(int current, int total) {
 }
 
 void DLG_ChangeTextW(wchar_t* text) {
-	SetDlgItemTextW(hDlg, IDC_STATIC_TEXT, text);
+	while(! SetDlgItemTextW(hDlg, IDC_STATIC_TEXT, text));
 }
 
 void DLG_StopProgress(void) {

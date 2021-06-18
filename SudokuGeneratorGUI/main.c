@@ -23,6 +23,7 @@ static inline void SetupMainWindowContent(void);
 static inline void RegisterWindowClass(void);
 static inline void UpdateChildPos(void);
 static void GenerateThreadProc(void* arg);
+static void FileDropProc(void* arg);
 static void SolveProc(void* arg);
 static inline void UpdateRepoNum(void);
 static inline int ImportAllFromFile(const char* filepath);
@@ -75,14 +76,12 @@ int WINAPI wWinMain(
 static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msgType, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	char filepath[256];
 
 	switch (msgType) {
 
-	case WM_DROPFILES: //TODO: 支持多个文件同时拖入
-		DragQueryFileA((HDROP)(wParam), 0, filepath, 256);
-		_beginthread(SolveProc, 0, filepath);
-		DLG_PopUpProgress(WNDTYPE_MARQUEE, L"正在读取");
+	case WM_DROPFILES:
+		_beginthread(FileDropProc, 0, (void*)wParam);
+		DLG_PopUpProgress(WNDTYPE_MARQUEE, L"正在打开文件");
 		UpdateRepoNum();
 		return 0;
 
@@ -140,6 +139,7 @@ static void GenerateThreadProc(void* arg) {
 	}
 }
 
+
 static void SolveProc(void* arg) {
 	char* filepath = (char*)arg;
 	switch (ImportAllFromFile(filepath)) {
@@ -160,7 +160,7 @@ static void SolveProc(void* arg) {
 static void ChangeTextProc(void* arg) {
 	DLG_ChangeTextW(L"发现无解数独");
 	Sleep(2000);
-	DLG_ChangeTextW(L"正在读取");
+	DLG_ChangeTextW(L"正在读取...");
 }
 
 static inline void RegisterWindowClass(void) {
@@ -344,3 +344,42 @@ static inline void ReactToMenuClick(int menuItem) {
 		break;
 	}
 }
+
+
+static void FileDropProc(void* arg) {
+	HDROP hDrop = (HDROP)arg;
+	char filepath[512];
+	wchar_t text[40];
+	size_t strsize;
+
+	int amount = DragQueryFileA(hDrop, (UINT)0xFFFFFFFF, NULL, 0);
+	for (int idx = 0; idx < amount; idx++) {
+		strsize = (size_t)DragQueryFileA(hDrop, idx, NULL, 0);
+		if (strsize >= 512) {
+			MessageBoxA(hWnd, "文件路径过长", "错误", MB_OK);
+			return;
+		}
+		DragQueryFileA(hDrop, idx, filepath, 512);
+
+		swprintf_s(text, 40, L"正在读取...   文件 %d/%d", idx + 1, amount);
+		DLG_ChangeTextW(text);
+		switch (ImportAllFromFile(filepath)) {
+		case -1:
+			DLG_StopProgress();
+			MessageBoxA(hWnd, "无法打开数独存储文件，可能不存在或被占用", "错误", MB_OK | MB_ICONERROR);
+			return;
+		case -2:
+			swprintf_s(text, 40, L"无法打开文件 %d", idx + 1);
+			DLG_ChangeTextW(text);
+			Sleep(1000);
+			break;
+		}
+	}
+	DLG_StopProgress();
+}
+
+/*
+char num[10];
+sprintf_s(num, 10, "%d", amount);
+MessageBoxA(NULL, num, "a", MB_OK);
+*/
