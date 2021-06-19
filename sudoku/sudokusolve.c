@@ -4,18 +4,22 @@
  */
 
 #include "sudoku.h"
+#include <stdio.h>
 
 typedef UINT32 ELEMENT;
 
-static ELEMENT* left;
-static ELEMENT* right;
-static ELEMENT* up;
-static ELEMENT* down;
-static ELEMENT* col;
-static int* row;
+static ELEMENT left[3000];
+static ELEMENT right[3000];
+static ELEMENT up[3000];
+static ELEMENT down[3000];
+static ELEMENT col[3000];
+static int row[3000];
 
-static ELEMENT stack[1054];
+static ELEMENT stack[3000];
 static int stackPtr;
+
+static ELEMENT generator;
+static PSUDOKU answer;
 
 #define LeftElmt(element)   (left[element])
 #define RightElmt(element)  (right[element])
@@ -30,6 +34,8 @@ static int stackPtr;
 #define StackPush(elmt) (stack[stackPtr++] = elmt)
 #define StackPop()		(stack[--stackPtr])
 
+#define GenerateNextElement()	(generator++)
+#define InitGenerator()			(generator = 325)
 // 条件宏
 #define POS_UNIQUE 0
 #define ROW_UNIQUE 1
@@ -44,27 +50,24 @@ static inline void RestoreColumn(ELEMENT elmtInCol);
 static inline void RestoreRow(ELEMENT elmtInRow);
 static inline void RemoveAll(ELEMENT elmt, int* rowCount, int* colCount);
 static inline void RestoreAll(int rowCount, int colCount);
+static inline void WriteAnswer(int rowNum);
 
 static int Dancing(void);
 
 static inline ELEMENT GetColumn(int condition, int cellIdx, int fillNum);
 static inline void AddRow(int cellIdx, int fillNum);
-static inline ELEMENT GenerateNextElement(void);
 
+int SolveSudoku(PSUDOKUPUZZLE pPuzzle) {
+	answer = &pPuzzle->answer;
+	SuInitialize(answer);
+	InitStack();
+	InitGenerator();
+	SetupArrays(&pPuzzle->problem);
+	puts("start");
+	return Dancing();
+}
 
 static void SetupArrays(PSUDOKU pSudoku) {
-	size_t arrayLen = sizeof(ELEMENT) * ((size_t) 81 * 36 - (size_t) pSudoku->filledNum * 32 + 325);
-	left = (ELEMENT*)malloc(arrayLen);
-	right = (ELEMENT*)malloc(arrayLen);
-	up = (ELEMENT*)malloc(arrayLen);
-	down = (ELEMENT*)malloc(arrayLen);
-	col = (ELEMENT*)malloc(arrayLen);
-	row = (int*)malloc(arrayLen);
-
-	if (!(left && right && up && down && col && row)) {
-		return;
-	}
-
 	for (ELEMENT i = 0; i < 325; i++) {
 		LeftElmt(i) = i - 1;
 		RightElmt(i) = i + 1;
@@ -129,10 +132,6 @@ static inline void AddRow(int cellIdx, int fillNum) {
 	}
 }
 
-static inline ELEMENT GenerateNextElement(void) {
-	static ELEMENT elmt = 325;
-	return elmt++;
-}
 
 static inline void RemoveColumn(ELEMENT elmtInCol) {
 	ELEMENT origin = elmtInCol;
@@ -168,23 +167,55 @@ static inline void RestoreRow(ELEMENT elmtInRow) {
 
 static inline void RemoveAll(ELEMENT elmt, int* rowCount, int* colCount) { // 先删行， 再删列
 	ELEMENT origin = elmt;
+	ELEMENT colElmt;
 	do {
-
+		colElmt = elmt;
+		while ((colElmt = DownElmt(colElmt)) != elmt) {
+			if (colElmt != ColElmt(colElmt)) {
+				RemoveRow(colElmt);
+				(*rowCount)++;
+				StackPush(colElmt);
+			}
+		}
 	} while ((elmt = RightElmt(elmt)) != origin);
+	
+	int i = 4;
+	while (i--) {
+		RemoveColumn(elmt);
+		(*colCount)++;
+		StackPush(elmt);
+		elmt = RightElmt(elmt);
+	}
 }
 
 static inline void RestoreAll(int rowCount, int colCount) { // 先恢复列， 再恢复行
+	while (colCount--) {
+		RestoreColumn(StackPop());
+	}
+	while (rowCount--) {
+		RestoreRow(StackPop());
+	}
+}
 
+static inline void WriteAnswer(int rowNum) {
+	int cellIdx = (rowNum - 1) % 81;
+	int fillNum = (rowNum - 1) / 81 + 1;
+	UpdateNumber(answer, (UINT8)fillNum, cellIdx);
 }
 
 static int Dancing(void) {  // -1：重新递归  0: 找到答案
 	ELEMENT start = RightElmt(0);
-	int rowRemoveCount = 0;
-	int colRemoveCount = 0;
+	if (start == 0) {
+		return 0;
+	}
+	int rowRemoveCount;
+	int colRemoveCount;
 	while ((start = DownElmt(start)) != ColElmt(start)) {
+		rowRemoveCount = 0;
+		colRemoveCount = 0;
 		RemoveAll(start, &rowRemoveCount, &colRemoveCount);
 		if (!Dancing()) {
-			// 写答案
+			WriteAnswer(RowNum(start));
 			return 0;
 		}
 		RestoreAll(rowRemoveCount, colRemoveCount);
