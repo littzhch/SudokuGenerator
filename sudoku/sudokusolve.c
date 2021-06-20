@@ -8,14 +8,14 @@
 
 typedef UINT32 ELEMENT;
 
-static ELEMENT left[3000];
-static ELEMENT right[3000];
-static ELEMENT up[3000];
-static ELEMENT down[3000];
-static ELEMENT col[3000];
-static int row[3000];
+static ELEMENT left[30000];
+static ELEMENT right[30000];
+static ELEMENT up[30000];
+static ELEMENT down[30000];
+static ELEMENT col[30000];
+static int row[30000];
 
-static ELEMENT stack[3000];
+static ELEMENT stack[30000];
 static int stackPtr;
 
 static ELEMENT generator;
@@ -33,6 +33,7 @@ static PSUDOKU answer;
 #define InitStack()		(stackPtr = 0)
 #define StackPush(elmt) (stack[stackPtr++] = elmt)
 #define StackPop()		(stack[--stackPtr])
+#define ENDFLAG         (0xffffffff)
 
 #define GenerateNextElement()	(generator++)
 #define InitGenerator()			(generator = 325)
@@ -63,7 +64,7 @@ int SolveSudoku(PSUDOKUPUZZLE pPuzzle) {
 	InitStack();
 	InitGenerator();
 	SetupArrays(&pPuzzle->problem);
-	puts("start");
+
 	return Dancing();
 }
 
@@ -168,7 +169,8 @@ static inline void RestoreRow(ELEMENT elmtInRow) {
 static inline void RemoveAll(ELEMENT elmt, int* rowCount, int* colCount) { // 先删行， 再删列
 	ELEMENT origin = elmt;
 	ELEMENT colElmt;
-	do {
+	int i = 4;
+	while (i--) {
 		colElmt = elmt;
 		while ((colElmt = DownElmt(colElmt)) != elmt) {
 			if (colElmt != ColElmt(colElmt)) {
@@ -177,10 +179,11 @@ static inline void RemoveAll(ELEMENT elmt, int* rowCount, int* colCount) { // 先
 				StackPush(colElmt);
 			}
 		}
-	} while ((elmt = RightElmt(elmt)) != origin);
+		elmt = RightElmt(elmt);
+	};
 	
-	int i = 4;
-	while (i--) {
+	i = 4;
+	while(i--){
 		RemoveColumn(elmt);
 		(*colCount)++;
 		StackPush(elmt);
@@ -197,6 +200,50 @@ static inline void RestoreAll(int rowCount, int colCount) { // 先恢复列， 再恢复
 	}
 }
 
+static inline void RemoveElement(ELEMENT elmt) {
+	DownElmt(UpElmt(elmt)) = DownElmt(elmt);
+	UpElmt(DownElmt(elmt)) = UpElmt(elmt);
+	RightElmt(LeftElmt(elmt)) = RightElmt(elmt);
+	LeftElmt(RightElmt(elmt)) = LeftElmt(elmt);
+}
+
+static inline void RestoreElement(ELEMENT elmt) {
+	DownElmt(UpElmt(elmt)) = elmt;
+	UpElmt(DownElmt(elmt)) = elmt;
+	RightElmt(LeftElmt(elmt)) = elmt;
+	LeftElmt(RightElmt(elmt)) = elmt;
+}
+
+static inline void RemoveColumnAndRows(ELEMENT colElmt) {
+	ELEMENT rowElmt;
+	StackPush(ENDFLAG);
+	while ((colElmt = DownElmt(colElmt)) != ColElmt(colElmt)) {
+		//puts("---");
+		//printf("removed: %d %d\n", (RowNum(colElmt) - 1) % 81, (RowNum(colElmt) - 1) / 81 + 1);
+		rowElmt = colElmt;
+		RemoveElement(rowElmt);
+		StackPush(rowElmt);
+		for (int i = 0; i < 3; i++) {
+			rowElmt = RightElmt(rowElmt);
+			RemoveElement(rowElmt);
+			StackPush(rowElmt);
+		}
+	}
+	//printf("previous header: right: %d\n", RightElmt(0));
+	RemoveElement(ColElmt(colElmt));
+	//printf("col remove:: %d\n", ColElmt(colElmt));
+	//printf("now: right: %d\n", RightElmt(0));
+	StackPush(ColElmt(colElmt));
+	//puts("----------");
+}
+
+static inline void RestoreColumnAndRows(void) {
+	ELEMENT toBeRestored;
+	while ((toBeRestored = StackPop()) != ENDFLAG) {
+		RestoreElement(toBeRestored);
+	}
+}
+
 static inline void WriteAnswer(int rowNum) {
 	int cellIdx = (rowNum - 1) % 81;
 	int fillNum = (rowNum - 1) / 81 + 1;
@@ -204,21 +251,43 @@ static inline void WriteAnswer(int rowNum) {
 }
 
 static int Dancing(void) {  // -1：重新递归  0: 找到答案
+	fflush(stdout);
 	ELEMENT start = RightElmt(0);
+	//printf("dancing start with col %d\n", start);
 	if (start == 0) {
 		return 0;
 	}
-	int rowRemoveCount;
-	int colRemoveCount;
+	ELEMENT elmt = start;
+	while ((elmt = RightElmt(elmt)) != 0) {
+		if (DownElmt(elmt) == elmt) {
+			return -1;
+		}
+	}
+	
+	ELEMENT toBeRemoved[4];
 	while ((start = DownElmt(start)) != ColElmt(start)) {
-		rowRemoveCount = 0;
-		colRemoveCount = 0;
-		RemoveAll(start, &rowRemoveCount, &colRemoveCount);
-		if (!Dancing()) {
+		//printf("%d %d\n", (RowNum(start) - 1) % 81, (RowNum(start) - 1) / 81 + 1);
+		toBeRemoved[0] = ColElmt(start);
+		toBeRemoved[1] = ColElmt(RightElmt(start));
+		toBeRemoved[2] = ColElmt(RightElmt(RightElmt(start)));
+		toBeRemoved[3] = ColElmt(RightElmt(RightElmt(RightElmt(start))));
+		//printf("%d %d %d %d\n", toBeRemoved[0], toBeRemoved[1], toBeRemoved[2], toBeRemoved[3]);
+		RemoveColumnAndRows(toBeRemoved[0]);
+		RemoveColumnAndRows(toBeRemoved[1]);
+		RemoveColumnAndRows(toBeRemoved[2]);
+		RemoveColumnAndRows(toBeRemoved[3]);
+		//puts("go further");
+		if (! Dancing()) {
+			//puts("backwithanswer");
+			//printf("%d\n", start);
 			WriteAnswer(RowNum(start));
 			return 0;
 		}
-		RestoreAll(rowRemoveCount, colRemoveCount);
+		RestoreColumnAndRows();
+		RestoreColumnAndRows();
+		RestoreColumnAndRows();
+		RestoreColumnAndRows();
 	}
+	//printf("back: %d\n", ColElmt(start));
 	return -1;
 }
