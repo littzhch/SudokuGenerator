@@ -27,7 +27,8 @@ void WarnningInfo(const char* message) {
 	WORD originAttr = textAttr;
 	textAttr |= (FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED);
 	textAttr ^= FOREGROUND_BLUE;
-	printf("Warnning ");
+	SetConsoleTextAttribute(output, textAttr);
+	printf("Warning ");
 	SetConsoleTextAttribute(output, originAttr);
 	puts(message);
 }
