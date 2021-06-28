@@ -5,6 +5,7 @@
 #define SUDOKUIO_API __declspec(dllimport)
 #endif
 
+#include <stdio.h>
 #include "sudoku.h"
 #define REPONAME "sudoku.repo"
 #define IMPORTBUFFERLEN 64
@@ -34,3 +35,6 @@ SUDOKUIO_API int ExportRepoAsJson(const char * filepath);
 SUDOKUIO_API int ImportPuzzleFromJson(PSUDOKUPUZZLE puzzles, const char * filepath);
 // 从json文件中导入数独题目。返回写入puzzles中的数独题目个数；若个数等于IMPORTBUFFERLEN，
 // 则可以继续导入，若个数小于IMPORTBUFFERLEN，则说明已经读取完成；若返回-1，说明无法打开文件
+
+
+SUDOKUIO_API void WriteDocumentXml(const PSUDOKUPUZZLE pPuzzles, int puzzleNum, FILE* file);
