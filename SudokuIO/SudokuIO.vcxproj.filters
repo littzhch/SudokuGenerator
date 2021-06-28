@@ -29,6 +29,9 @@
     <ClCompile Include="json.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="docxWritexml.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SudokuIO.rc">
