@@ -59,7 +59,7 @@ L"<w:pPr><w:spacing w:afterLines=\"50\" w:after=\"156\"/></w:pPr><w:p><w:r>"
 "<w:gridCol w:w=\"567\"/>"
 "</w:tblGrid>";
 
-    
+
 
 static const wchar_t* tableEnd = L"</w:tbl>";
 
@@ -108,8 +108,9 @@ void WriteDocumentXml(const PSUDOKUPUZZLE pPuzzles, int puzzleNum, FILE* file) {
             }
             else {
                 AddSpace(file);
-            }
-        }
+	}
+	fputs(xmlEnd, file);
+}
 	}
 	fputws(xmlEnd, file);
 }
@@ -120,7 +121,7 @@ static inline void WriteXmlTable(const PSUDOKU pSudoku, _Bool isAnswer, int puzz
         if (GetCol(idx) == 1) {
             fputws(L"<w:tr><w:trPr><w:trHeight w:hRule=\"exact\" w:val=\"567\"/>"
                 "<w:jc w:val=\"center\"/></w:trPr>", file);
-        }
+	}
         WriteTableCell(idx, pSudoku->elements[idx], file);
         if (GetCol(idx) == 9) {
             fputws(L"</w:tr>", file);
@@ -185,7 +186,7 @@ static inline void WriteBorders(int cellIdx, FILE* file) {
         borderWidth[0] = 4;
         borderWidth[2] = 4;
         break;
-    }
+}
 
     switch (GetCol(cellIdx)) {
     case 1:
