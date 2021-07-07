@@ -8,33 +8,33 @@ static inline void CommandClean(_Bool silent);
 static inline void CommandInit(_Bool silent);
 static inline void CommandExport(const char* filepath, _Bool silent);
 static inline void CommandSolve(const char* filepath, _Bool silent);
-static inline void CommandGenerate(COMMAND* pCommand);
+static inline void CommandGenerate(COMMAND command);
 static void PrintProgress(int current, int total);
 
 
 int main(int argc, char* argv[]) {
 	IOInit();
 	COMMAND cmd;
-	ReadCommand(&cmd, argc, argv);
+	ReadCommand(cmd, argc, argv);
 
-	switch (cmd.type) {
+	switch ((unsigned int) cmd[type]) {
 	case TYPE_NONE:
 		PrintWelcome();
 		break;
 	case TYPE_CLEAN:
-		CommandClean(cmd.silent);
+		CommandClean(cmd[silent]);
 		break;
 	case TYPE_SOLVE:
-		CommandSolve(cmd.filepath, cmd.silent);
+		CommandSolve(cmd[file], cmd[silent]);
 		break;
 	case TYPE_GENERATE:
-		CommandGenerate(&cmd);
+		CommandGenerate(cmd);
 		break;
 	case TYPE_INIT:
-		CommandInit(cmd.silent);
+		CommandInit(cmd[silent]);
 		break;
 	case TYPE_EXPORT:
-		CommandExport(cmd.filepath, cmd.silent);
+		CommandExport(cmd[file], cmd[silent]);
 		break;
 	case TYPE_HELP:
 		PrintHelp();
@@ -133,27 +133,27 @@ static inline void CommandSolve(const char* filepath, _Bool silent) {
 	}
 }
 
-static inline void CommandGenerate(COMMAND* pCommand) {
-	if (!pCommand->thread) {
-		pCommand->thread = 1;
+static inline void CommandGenerate(COMMAND command) {
+	if (!command[trd]) {
+		command[trd] = 1;
 	}
-	if (!pCommand->amount) {
-		pCommand->amount = 1;
+	if (!command[num]) {
+		command[num] = 1;
 	}
-	if (!pCommand->clue1) {
-		pCommand->clue1 = pCommand->clue2 = 40;
+	if (!command[clue]) {
+		command[clue] = command[clue_2] = 40;
 	}
 
 	void (*InfoProc)(int, int) = NULL;
-	if (!pCommand->silent) {
+	if (!command[silent]) {
 		InfoProc = PrintProgress;
 	}
-	PSUDOKUPUZZLE puzzles = malloc(pCommand->amount * sizeof(SUDOKUPUZZLE));
-	GenerateSudokuMT(puzzles, pCommand->amount, pCommand->clue1, pCommand->clue2, pCommand->thread, InfoProc);
-	int code = AddToRepository(puzzles, pCommand->amount);
+	PSUDOKUPUZZLE puzzles = malloc(((int)command[num]) * sizeof(SUDOKUPUZZLE));
+	GenerateSudokuMT(puzzles, command[num], command[clue], command[clue_2], command[trd], InfoProc);
+	int code = AddToRepository(puzzles, command[num]);
 	free(puzzles);
 	if (code == -1) {
-		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", pCommand->silent);
+		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", command[silent]);
 	}
 }
 

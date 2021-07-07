@@ -2,86 +2,59 @@
 #include <windows.h>
 #include "cmdinteract.h"
 
-#define INF -1 //used by CheckNumber()
 
-enum lookfor {file, silent, num, trd, clue};
+static const char* switchname[] = { "-silent", "-file", "-trd", "-num", "-clue" };
+
 static int ReadOperate(const char* arg);
 static int ReadSwitch(const char* arg);
 static int CheckNumber(const char* arg, int min, int max);
-static void CheckClue(const char* arg, COMMAND* pCommand);
+static void CheckClue(const char* arg, COMMAND command);
 
-void ReadCommand(COMMAND* pCommand, int argc, const char* argv[]) {
-	ZeroMemory(pCommand, sizeof(COMMAND));
+void ReadCommand(COMMAND command, int argc, const char* argv[]) {
+	ZeroMemory(command, sizeof(COMMAND));
 	if (argc == 1) {
-		pCommand->type = TYPE_NONE;
+		command[type] = TYPE_NONE;
 		return;
-	}	
+	}
 	
-	pCommand->type = ReadOperate(argv[1]);
+	command[type] = ReadOperate(argv[1]);
 	int currentswitch;
 	for (int idx = 2; idx < argc; idx++) {
 		currentswitch = ReadSwitch(argv[idx]);
+		if ((idx == argc - 1) && (currentswitch != silent)) {
+			ErrExit(ERR_ARG_WRONGFORMAT, switchname[currentswitch], "选项后无参数", 0);
+		}
 		switch (currentswitch) {
 		case silent:
-			pCommand->silent = 1;
-			continue;
+			command[silent] = 1;
+			break;
 		case file:
-			if (idx < argc - 1) {
-				pCommand->filepath = argv[++idx];
-				continue;
-			}
-			ErrExit(ERR_ARG_WRONGFORMAT, "-file", "选项后无参数", 0);
+			command[file] = argv[++idx];
+			break;
 		case num:
-			if (idx < argc - 1) {
-				pCommand->amount = CheckNumber(argv[++idx], 1, INF);
-				continue;
-			}
-			ErrExit(ERR_ARG_WRONGFORMAT, "-num", "选项后无参数", 0);
+			command[num] = CheckNumber(argv[++idx], 1, -1);
+			break;
 		case trd:
-			if (idx < argc - 1) {
-				pCommand->thread= CheckNumber(argv[++idx], 1, 64);
-				continue;
-			}
-			ErrExit(ERR_ARG_WRONGFORMAT, "-trd", "选项后无参数", 0);
+			command[trd] = CheckNumber(argv[++idx], 1, 64);
+			break;
 		case clue:
-			if (idx < argc - 1) {
-				CheckClue(argv[++idx], pCommand);
-				continue;
+			CheckClue(argv[++idx], command);
+			break;
+		}
+	}
+
+	int operateType = (int)command[type];
+	for (int start = silent; start <= clue; start++) {
+		if (!(operateType & (1 << start))) {
+			if (command[start]) {
+				ErrExit(ERR_ARG_MISMATCH, switchname[start], 
+					"当前操作不允许该选项", start == silent ? command[silent] : 0);
 			}
-			ErrExit(ERR_ARG_WRONGFORMAT, "-clue", "选项后无参数", 0);
 		}
 	}
-
-	int type = pCommand->type;
-	if (!(0b00001 & type)) {
-		if (pCommand->silent) {
-			ErrExit(ERR_ARG_MISMATCH, "-silent", "当前操作不允许该选项", 0);
-		}
-	}
-	if (!(0b00010 & type)) {
-		if (pCommand->filepath) {
-			ErrExit(ERR_ARG_MISMATCH, "-file", "当前操作不允许该选项", pCommand->silent);
-		}
-	}
-	if (!(0b00100 & type)) {
-		if (pCommand->thread) {
-			ErrExit(ERR_ARG_MISMATCH, "-trd", "当前操作不允许该选项", pCommand->silent);
-		}
-	}
-	if (!(0b01000 & type)) {
-		if (pCommand->amount) {
-			ErrExit(ERR_ARG_MISMATCH, "-num", "当前操作不允许该选项", pCommand->silent);
-		}
-	}
-	if (!(0b10000 & type)) {
-		if (pCommand->clue1) {
-			ErrExit(ERR_ARG_MISMATCH, "-clue", "当前操作不允许该选项", pCommand->silent);
-		}
-	}
-
-	if (type == TYPE_EXPORT) {
-		if (!pCommand->filepath) {
-			ErrExit(ERR_ARG_MISMATCH, argv[1], "未指定 -file 选项", pCommand->silent);
+	if (operateType == TYPE_EXPORT) {
+		if (!command[file]) {
+			ErrExit(ERR_ARG_MISMATCH, argv[1], "未指定 -file 选项", command[silent]);
 		}
 	}
 }
@@ -129,24 +102,10 @@ static int ReadOperate(const char* arg) {
 }
 
 static int ReadSwitch(const char* arg) {
-	if (arg[0] != '-') {
-		ErrExit(ERR_ARG_WRONGFORMAT, arg, "无效的选项", 0);
-	}
-	
-	if (!strcmp("file", arg + 1)) {
-		return file;
-	}
-	if (!strcmp("silent", arg + 1)) {
-		return silent;
-	}
-	if (!strcmp("num", arg + 1)) {
-		return num;
-	}
-	if (!strcmp("trd", arg + 1)) {
-		return trd;
-	}
-	if (!strcmp("clue", arg + 1)) {
-		return clue;
+	for (int stype = silent; stype <= clue; stype++) {
+		if (!strcmp(switchname[stype], arg)) {
+			return stype;
+		}
 	}
 	ErrExit(ERR_ARG_WRONGFORMAT, arg, "无效的选项", 0);
 }
@@ -174,7 +133,7 @@ static int CheckNumber(const char* arg, int min, int max) {
 	return number;
 }
 
-static void CheckClue(const char* arg, COMMAND* pCommand) {
+static void CheckClue(const char* arg, COMMAND command) {
 	int ptr = -1;
 	_Bool twoclue = 0;
 	while (arg[++ptr]) {
@@ -214,16 +173,16 @@ static void CheckClue(const char* arg, COMMAND* pCommand) {
 			ErrExit(ERR_ARG_WRONGFORMAT, arg, "提示数超出范围", 0);
 		}
 		if (clue1 > clue2) {
-			pCommand->clue1 = clue2;
-			pCommand->clue2 = clue1;
+			command[clue] = clue2;
+			command[clue_2] = clue1;
 		}
 		else {
-			pCommand->clue1 = clue1;
-			pCommand->clue2 = clue2;
+			command[clue] = clue1;
+			command[clue_2] = clue2;
 		}
 	}
 	else {
-		pCommand->clue1 = clue1;
-		pCommand->clue2 = clue1;
+		command[clue] = clue1;
+		command[clue_2] = clue1;
 	}
 }

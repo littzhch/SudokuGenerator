@@ -3,18 +3,11 @@
 #include "sudoku.h"
 
 
-typedef struct {
-	int type;
-	int amount;
-	int thread;
-	int clue1;
-	int clue2;
-	const char* filepath;
-	_Bool silent;
-} COMMAND;
+typedef void* COMMAND[7];
+enum cmdIdx { silent, file, trd, num, clue, clue_2, type };
 
-// COMMAND.type 宏
-#define TYPE_SOLVE			0b0100011     // 后五位从高到低：clue num trd file silent
+// OPERATE 宏
+#define TYPE_SOLVE			0b0100011
 #define TYPE_GENERATE		0b0111101
 #define TYPE_INIT			0b0100001
 #define TYPE_CLEAN          0b1100001
@@ -23,7 +16,7 @@ typedef struct {
 #define TYPE_QUERY          0b1100000
 #define TYPE_NONE			0b0000000
 
-void ReadCommand(COMMAND* pCommand, int argc, const char* argv[]);
+void ReadCommand(COMMAND command, int argc, const char* argv[]);
 // 分析命令行参数，生成COMMAND类型指令
 // 若指令错误，报错退出；确保返回的指令格式正确
 
