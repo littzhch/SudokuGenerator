@@ -5,48 +5,42 @@
 
 void SuInitialize(PSUDOKU pSudoku) {
 	ZeroMemory(pSudoku, sizeof(SUDOKU));
+	int idx;
+	for (idx = 0; idx < 9; idx++) {
+		pSudoku->rowValids[idx] = 0b0000001111111110;
+	}
+	for (idx = 0; idx < 9; idx++) {
+		pSudoku->colValids[idx] = 0b0000001111111110;
+	}
+	for (idx = 0; idx < 9; idx++) {
+		pSudoku->blkValids[idx] = 0b0000001111111110;
+	}
 }
 
 
 void UpdateNumber(PSUDOKU pSudoku, UINT8 num, int index) {
+	int rowIdx = GetRow(index) - 1;
+	int colIdx = GetCol(index) - 1;
+	int blkIdx = GetBlock(index) - 1;
+	UINT16 changeBits = 0;
 	if (pSudoku->elements[index]) {
-		if (!num)
-			pSudoku->filledNum--;
+		changeBits ^= ((UINT16)1) << (pSudoku->elements[index]);
+		pSudoku->filledNum--;
 	}
-	else {
-		if (num)
-			pSudoku->filledNum++;
+	if (num) {
+		changeBits ^= ((UINT16)1) << num;
+		pSudoku->filledNum++;
 	}
+	pSudoku->rowValids[rowIdx] ^= changeBits;
+	pSudoku->colValids[colIdx] ^= changeBits;
+	pSudoku->blkValids[blkIdx] ^= changeBits;
 	pSudoku->elements[index] = num;
 }
 
 
 UINT16 GetValidNumber(PSUDOKU pSudoku, int index) {
-	UINT16 result = 0b0000001111111110;
-	int row = index / 9 + 1;
-	int col = index % 9 + 1;
-	int blockCenterRow = ((row - 1) / 3) * 3 + 2;
-	int blockCenterCol = ((col - 1) / 3) * 3 + 2;
-	for (int idx = 1; idx <= 9; idx++) {
-		result &= ~(1 << pSudoku->elements[Position(row, idx)]);
-		result &= ~(1 << pSudoku->elements[Position(idx, col)]);
-	}
-	for (int i = blockCenterRow - 1; i <= blockCenterRow + 1; i++) {
-		for (int j = blockCenterCol - 1; j <= blockCenterCol + 1; j++) {
-			if ((i != row) && (j != col)) {
-				result &= ~(1 << pSudoku->elements[Position(i, j)]);
-			}
-		}
-	}
-	return result;
-}
-
-void PrintSudoku(PSUDOKU pSudoku) {
-	for (int i = 1; i <= 9; i++) {
-		for (int j = 1; j <= 9; j++) {
-			printf("%d ", pSudoku->elements[Position(i, j)]);
-		}
-		puts("");
-	}
-	puts("");
+	int rowIdx = GetRow(index) - 1;
+	int colIdx = GetCol(index) - 1;
+	int blkIdx = GetBlock(index) - 1;
+	return (pSudoku->rowValids[rowIdx] & pSudoku->colValids[colIdx] & pSudoku->blkValids[blkIdx]);
 }
