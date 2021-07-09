@@ -5,6 +5,7 @@
 #include "dialogs.h"
 #include "resource.h"
 #include "menu.h"
+#include "SudokuIO.h"
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
@@ -65,7 +66,7 @@ int WINAPI wWinMain(
 		DispatchMessageW(&msg);
 	}
 	DLG_UninitFileService();
-	return msg.wParam;
+	return (int)msg.wParam;
 }
 
 
@@ -81,7 +82,7 @@ static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msgType, WPARAM wParam, LPAR
 		return 0;
 
 	case WM_CTLCOLORSTATIC:
-		return (HBRUSH)(COLOR_WINDOW + 1);
+		return (LRESULT)(HBRUSH)(COLOR_WINDOW + 1);
 
 	case WM_COMMAND:
 		ReactToMenuClick(LOWORD(wParam));
@@ -155,12 +156,12 @@ static inline void SetupMainWindowContent(void) {
 		WS_CHILD | WS_VISIBLE | SS_ICON,
 		100, 100, 150, 150,
 		hWnd,
-		1,
+		(HMENU)1,
 		hIns,
 		NULL
 	);
 	SendMessageW(hPicture, STM_SETIMAGE, IMAGE_ICON,
-		LoadIconW(hIns, MAKEINTRESOURCEW(IDI_ICON2)));
+		(LPARAM)LoadIconW(hIns, MAKEINTRESOURCEW(IDI_ICON2)));
 
 	hText = CreateWindowW(
 		L"STATIC",
@@ -168,7 +169,7 @@ static inline void SetupMainWindowContent(void) {
 		WS_CHILD | WS_VISIBLE | SS_LEFT,
 		0, 0, 300, 30,
 		hWnd,
-		2,
+		(HMENU)2,
 		hIns,
 		NULL
 	);

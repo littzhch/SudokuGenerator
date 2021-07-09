@@ -108,9 +108,8 @@ void WriteDocumentXml(const PSUDOKUPUZZLE pPuzzles, int puzzleNum, FILE* file) {
             }
             else {
                 AddSpace(file);
-	}
-	fputs(xmlEnd, file);
-}
+            }
+        }
 	}
 	fputws(xmlEnd, file);
 }

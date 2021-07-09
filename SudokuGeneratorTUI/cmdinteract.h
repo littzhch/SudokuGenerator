@@ -3,7 +3,7 @@
 #include "sudoku.h"
 
 
-typedef void* COMMAND[7];
+typedef UINT64 COMMAND[7];
 enum cmdIdx { silent, file, trd, num, clue, clue_2, type };
 
 // OPERATE ºê
@@ -38,7 +38,7 @@ void PrintHelp(void);
 #define ERR_REPO_EMPTY       4
 #define ERR_FILE_CANTOPEN    5
 
-_Noreturn ErrExit(int errType, const char* errContent, const char* message, _Bool silent);
+_Noreturn void ErrExit(int errType, const char* errContent, const char* message, _Bool silent);
 
 void WarnningInfo(const char* message);
 

@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 		CommandClean(cmd[silent]);
 		break;
 	case TYPE_SOLVE:
-		CommandSolve(cmd[file], cmd[silent]);
+		CommandSolve((char*)cmd[file], cmd[silent]);
 		break;
 	case TYPE_GENERATE:
 		CommandGenerate(cmd);
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 		CommandInit(cmd[silent]);
 		break;
 	case TYPE_EXPORT:
-		CommandExport(cmd[file], cmd[silent]);
+		CommandExport((char*)cmd[file], cmd[silent]);
 		break;
 	case TYPE_HELP:
 		PrintHelp();
@@ -149,8 +149,9 @@ static inline void CommandGenerate(COMMAND command) {
 		InfoProc = PrintProgress;
 	}
 	PSUDOKUPUZZLE puzzles = malloc(((int)command[num]) * sizeof(SUDOKUPUZZLE));
-	GenerateSudokuMT(puzzles, command[num], command[clue], command[clue_2], command[trd], InfoProc);
-	int code = AddToRepository(puzzles, command[num]);
+	GenerateSudokuMT(puzzles, (int)command[num], (int)command[clue], 
+		(int)command[clue_2], (int)command[trd], InfoProc);
+	int code = AddToRepository(puzzles, (int)command[num]);
 	free(puzzles);
 	if (code == -1) {
 		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", command[silent]);

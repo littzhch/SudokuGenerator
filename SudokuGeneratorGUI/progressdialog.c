@@ -1,10 +1,10 @@
 #include "dialogs.h"
 #include "resource.h"
 
-static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam);
+BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 static HWND hDlg;
-extern HINSTANCE hWnd;
+extern HWND hWnd;
 
 static int type;
 static wchar_t* textstr;
@@ -12,7 +12,7 @@ static wchar_t* textstr;
 void DLG_PopUpProgress(int wndType, wchar_t* text) {
 	type = wndType;
 	textstr = text;
-	DialogBoxA(NULL, IDD_DIALOG2, hWnd, DlgProc);
+	DialogBoxA(NULL, MAKEINTRESOURCEA(IDD_DIALOG2), hWnd, (DLGPROC)DlgProc);
 }
 
 
@@ -34,7 +34,7 @@ void DLG_StopProgress(void) {
 	while (!EndDialog(hDlg, 0));
 }
 
-static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
 	case WM_INITDIALOG:
 		hDlg = hwndDlg;
