@@ -65,7 +65,6 @@ int WINAPI wWinMain(
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
 	}
-	DLG_UninitFileService();
 	return (int)msg.wParam;
 }
 
@@ -93,6 +92,11 @@ static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msgType, WPARAM wParam, LPAR
 		hdc = BeginPaint(hwnd, &ps);
 		FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
 		EndPaint(hwnd, &ps);
+		return 0;
+
+	case WM_CLOSE:
+		DLG_UninitFileService();
+		DestroyWindow(hWnd);
 		return 0;
 
 	case WM_DESTROY:
