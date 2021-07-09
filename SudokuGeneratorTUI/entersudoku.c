@@ -20,7 +20,7 @@ int GetPuzzleFromUser(PSUDOKUPUZZLE puzzles) {
 }
 
 static inline int GetSingleSudoku(PSUDOKUPUZZLE puzzle) {
-	SuInitialize(puzzle);
+	SuInitialize(&puzzle->problem);
 	for (int idx = 1; idx <= 9; idx++) {
 		if (GetSingleLine(puzzle, idx)) {
 			idx--;
