@@ -3,7 +3,7 @@
 #include "sudoku.h"
 
 
-typedef void* COMMAND[7];
+typedef UINT64 COMMAND[7];
 enum cmdIdx { silent, file, trd, num, clue, clue_2, type };
 
 // OPERATE ºê

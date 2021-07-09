@@ -3,7 +3,7 @@
 #include "multithread.h"
 #include "resource.h"
 
-static BOOL CALLBACK generate(HWND hDlg, UINT msgType, WPARAM wParam, LPARAM lParam);
+BOOL CALLBACK generate(HWND hDlg, UINT msgType, WPARAM wParam, LPARAM lParam);
 
 extern HWND hWnd;
 extern HINSTANCE hIns;
@@ -17,17 +17,17 @@ static struct gInfo* pInfo;
 void DLG_AskForSettings(struct gInfo* info) {
 	pInfo = info;
 	ZeroMemory(info, sizeof(struct gInfo));
-	DialogBoxW(hIns, IDD_DIALOG3, hWnd, generate);
+	DialogBoxW(hIns, MAKEINTRESOURCEW(IDD_DIALOG3), hWnd, (DLGPROC)generate);
 }
 
 
-static BOOL CALLBACK generate(HWND hDlg, UINT msgType, WPARAM wParam, LPARAM lParam) {
+BOOL CALLBACK generate(HWND hDlg, UINT msgType, WPARAM wParam, LPARAM lParam) {
 	switch (msgType) {
 	case WM_INITDIALOG:
-		SendDlgItemMessageA(hDlg, IDC_EDIT1, WM_SETTEXT, 0, lastAmount);
-		SendDlgItemMessageA(hDlg, IDC_EDIT2, WM_SETTEXT, 0, lastClueLeft);
-		SendDlgItemMessageA(hDlg, IDC_EDIT3, WM_SETTEXT, 0, lastClueRight);
-		SendDlgItemMessageA(hDlg, IDC_EDIT4, WM_SETTEXT, 0, lastThread);
+		SendDlgItemMessageA(hDlg, IDC_EDIT1, WM_SETTEXT, 0, (LPARAM)lastAmount);
+		SendDlgItemMessageA(hDlg, IDC_EDIT2, WM_SETTEXT, 0, (LPARAM)lastClueLeft);
+		SendDlgItemMessageA(hDlg, IDC_EDIT3, WM_SETTEXT, 0, (LPARAM)lastClueRight);
+		SendDlgItemMessageA(hDlg, IDC_EDIT4, WM_SETTEXT, 0, (LPARAM)lastThread);
 		return TRUE; 
 	case WM_COMMAND:
 		if (LOWORD(wParam) == BTOK || LOWORD(wParam) == BTCANCEL || LOWORD(wParam) == IDCANCEL) {
@@ -35,10 +35,10 @@ static BOOL CALLBACK generate(HWND hDlg, UINT msgType, WPARAM wParam, LPARAM lPa
 			*(WORD*)lastClueLeft = 32;
 			*(WORD*)lastClueRight = 32;
 			*(WORD*)lastThread = 32;
-			SendDlgItemMessageA(hDlg, IDC_EDIT1, EM_GETLINE, 0, lastAmount);
-			SendDlgItemMessageA(hDlg, IDC_EDIT2, EM_GETLINE, 0, lastClueLeft);
-			SendDlgItemMessageA(hDlg, IDC_EDIT3, EM_GETLINE, 0, lastClueRight);
-			SendDlgItemMessageA(hDlg, IDC_EDIT4, EM_GETLINE, 0, lastThread);
+			SendDlgItemMessageA(hDlg, IDC_EDIT1, EM_GETLINE, 0, (LPARAM)lastAmount);
+			SendDlgItemMessageA(hDlg, IDC_EDIT2, EM_GETLINE, 0, (LPARAM)lastClueLeft);
+			SendDlgItemMessageA(hDlg, IDC_EDIT3, EM_GETLINE, 0, (LPARAM)lastClueRight);
+			SendDlgItemMessageA(hDlg, IDC_EDIT4, EM_GETLINE, 0, (LPARAM)lastThread);
 			switch (LOWORD(wParam)) {
 			case BTOK:
 				sscanf_s(lastAmount, "%d", &pInfo->num);

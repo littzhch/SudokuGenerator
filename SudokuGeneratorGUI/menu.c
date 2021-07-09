@@ -112,7 +112,7 @@ int ImportAllFromFile(const char* filepath, int* noAnswerCount) {
 
 
 static void ExportThreadProc(void* arg) {
-	char* path = (char*)arg;
+	wchar_t* path = (wchar_t*)arg;
 	switch (ExportRepoAsJson(W2A(path))) {
 	case 0:
 		DLG_StopProgress();

@@ -29,7 +29,7 @@ void ReadCommand(COMMAND command, int argc, const char* argv[]) {
 			command[silent] = 1;
 			break;
 		case file:
-			command[file] = argv[++idx];
+			command[file] = (UINT64)argv[++idx];
 			break;
 		case num:
 			command[num] = CheckNumber(argv[++idx], 1, -1);
@@ -43,7 +43,7 @@ void ReadCommand(COMMAND command, int argc, const char* argv[]) {
 		}
 	}
 
-	int operateType = (int)command[type];
+	unsigned int operateType = (unsigned int)command[type];
 	for (int start = silent; start <= clue; start++) {
 		if (!(operateType & (1 << start))) {
 			if (command[start]) {
