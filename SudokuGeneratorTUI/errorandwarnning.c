@@ -3,7 +3,7 @@
 
 static WORD GetCurrentTextAttribute(HANDLE handle);
 
-_Noreturn ErrExit(int errType, const char * errContent, const char* message, _Bool silent) {
+_Noreturn void ErrExit(int errType, const char * errContent, const char* message, _Bool silent) {
 	if (!silent) {
 		HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
 		WORD textAttr = GetCurrentTextAttribute(output);
