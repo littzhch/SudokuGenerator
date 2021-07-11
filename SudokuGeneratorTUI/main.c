@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 	COMMAND cmd;
 	ReadCommand(cmd, argc, argv);
 
-	switch ((unsigned int) cmd[type]) {
+	switch (cmd[type]) {
 	case TYPE_NONE:
 		PrintWelcome();
 		break;

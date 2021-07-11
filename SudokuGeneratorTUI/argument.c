@@ -3,7 +3,7 @@
 #include "cmdinteract.h"
 
 
-static const char* switchname[] = { "-silent", "-file", "-trd", "-num", "-clue" };
+static const char* const switchname[] = { "-silent", "-file", "-trd", "-num", "-clue" };
 
 static int ReadOperate(const char* arg);
 static int ReadSwitch(const char* arg);
@@ -18,7 +18,7 @@ void ReadCommand(COMMAND command, int argc, const char* argv[]) {
 	}
 	
 	command[type] = ReadOperate(argv[1]);
-	int currentswitch;
+	SWITCHTYPE currentswitch;
 	for (int idx = 2; idx < argc; idx++) {
 		currentswitch = ReadSwitch(argv[idx]);
 		if ((idx == argc - 1) && (currentswitch != silent)) {
@@ -44,7 +44,7 @@ void ReadCommand(COMMAND command, int argc, const char* argv[]) {
 	}
 
 	unsigned int operateType = (unsigned int)command[type];
-	for (int start = silent; start <= clue; start++) {
+	for (SWITCHTYPE start = silent; start <= clue; start++) {
 		if (!(operateType & (1 << start))) {
 			if (command[start]) {
 				ErrExit(ERR_ARG_MISMATCH, switchname[start], 
@@ -102,7 +102,7 @@ static int ReadOperate(const char* arg) {
 }
 
 static int ReadSwitch(const char* arg) {
-	for (int stype = silent; stype <= clue; stype++) {
+	for (SWITCHTYPE stype = silent; stype <= clue; stype++) {
 		if (!strcmp(switchname[stype], arg)) {
 			return stype;
 		}

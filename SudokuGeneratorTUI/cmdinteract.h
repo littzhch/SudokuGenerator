@@ -4,7 +4,15 @@
 
 
 typedef UINT64 COMMAND[7];
-enum cmdIdx { silent, file, trd, num, clue, clue_2, type };
+typedef enum {
+	silent = 0,
+	file,
+	trd,num,
+	clue,
+	clue_2,
+	type 
+} SWITCHTYPE;
+
 
 // OPERATE ºê
 #define TYPE_SOLVE			0b0100011
