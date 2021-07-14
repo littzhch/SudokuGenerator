@@ -65,7 +65,7 @@ static inline char* GetSelfVersion(const char* selfpath) {
 }
 
 static inline char* GetSelfFilePath(void) {
-	static char selfpath[512] = {0};
-	GetModuleFileNameA(NULL, selfpath, 512);
+	static char selfpath[MAX_PATH] = {0};
+	GetModuleFileNameA(NULL, selfpath, MAX_PATH);
 	return selfpath;
 }

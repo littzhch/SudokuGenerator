@@ -184,7 +184,7 @@ static inline void SetupMainWindowContent(void) {
 
 static void FileDropProc(void* arg) {
 	HDROP hDrop = (HDROP)arg;
-	char filepath[512];
+	char filepath[MAX_PATH];
 	wchar_t text[40];
 	size_t strsize;
 	int noAnswerCount = 0;
@@ -192,11 +192,7 @@ static void FileDropProc(void* arg) {
 	int amount = DragQueryFileA(hDrop, (UINT)0xFFFFFFFF, NULL, 0);
 	for (int idx = 0; idx < amount; idx++) {
 		strsize = (size_t)DragQueryFileA(hDrop, idx, NULL, 0);
-		if (strsize >= 512) {
-			MessageBoxA(hWnd, "文件路径过长", "错误", MB_OK);
-			return;
-		}
-		DragQueryFileA(hDrop, idx, filepath, 512);
+		DragQueryFileA(hDrop, idx, filepath, MAX_PATH);
 
 		swprintf_s(text, 40, L"正在读取...   文件 %d/%d", idx + 1, amount);
 		DLG_ChangeTextWL(text);

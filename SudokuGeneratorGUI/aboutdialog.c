@@ -31,10 +31,10 @@ static BOOL CALLBACK about(HWND hDlg, UINT msgType, WPARAM wParam, LPARAM lParam
 
 
 static inline char* GetSelfVersion(void) {
-	static char* selfpath[512] = { 0 };
+	static char* selfpath[MAX_PATH] = { 0 };
 	static char* result[44];
 
-	GetModuleFileNameA(NULL, (LPSTR) selfpath, 512);
+	GetModuleFileNameA(NULL, (LPSTR) selfpath, MAX_PATH);
 	UINT16 version[4] = { 0, 0, 0, 0 };
 	DWORD useless;
 	DWORD size = GetFileVersionInfoSizeA((LPCSTR) selfpath, (LPDWORD) &useless);

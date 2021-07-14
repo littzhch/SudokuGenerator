@@ -3,14 +3,14 @@
 
 
 static inline int HaveRepository(void);
-char REPOPATH[512];
+char REPOPATH[MAX_PATH];
 
 void IOInit(void) {
-	int len = GetModuleFileNameA(NULL, REPOPATH, 512);
+	int len = GetModuleFileNameA(NULL, REPOPATH, MAX_PATH);
 	while (REPOPATH[--len] != '\\')
 		;
 	REPOPATH[len + 1] = '\0';
-	strcat_s(REPOPATH, 512, REPONAME);
+	strcat_s(REPOPATH, MAX_PATH, REPONAME);
 }
 
 
