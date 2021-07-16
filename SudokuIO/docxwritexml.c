@@ -2,6 +2,51 @@
 #include "sudoku.h"
 #include "sudokuIO.h"
 
+static inline void WriteDocumentXml(const PSUDOKUPUZZLE pPuzzles, int puzzleNum, FILE* file);
+
+
+
+UINT32 Crc32(FILE* file) {
+    UINT32 crc = 0xffffffff;
+    UINT32 poly = 0x04c11db7;
+    UINT32 buffer1;
+    unsigned char buffer2;
+    rewind(file);
+    fread(&buffer1, 1, 4, file);
+    for (int i = 0; i < 32; i++) {
+        crc ^= ((buffer1 >> i) & 1) << (31 - i);
+    }
+    while (fread(&buffer2, 1, 1, file)) {
+        for (int i = 0; i < 8; i++) {
+            if (crc & 0x80000000) {
+                crc <<= 1;
+                crc |= (buffer2 >> i) & 1;
+                crc ^= poly;
+            }
+            else {
+                crc <<= 1;
+                crc |= (buffer2 >> i) & 1;
+            }
+        }
+    }
+    for (int i = 0; i < 32; i++) {
+        if (crc & 0x80000000) {
+            crc <<= 1;
+            crc ^= poly;
+        }
+        else {
+            crc <<= 1;
+        }
+    }
+    buffer1 = 0;
+    for (int i = 0; i < 32; i++) {
+        buffer1 |= ((crc >> i) & 1) << (31 - i);
+    }
+    return buffer1 ^ 0xffffffff;
+}
+
+
+
 static const wchar_t* xmlHeader = 
     L"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\
     <w:document\
@@ -76,15 +121,11 @@ w:hAnsi=\"Cambria\"/><w:sz w:val=\"36\"/><w:szCs w:val=\"40\"/></w:rPr>\
 static inline void WriteXmlTable(const PSUDOKU pSudoku, _Bool isAnswer, int puzzleNumber, FILE* file);
 static inline void AddPageBreak(FILE* file);
 static inline void AddSpace(FILE* file);
-
-//functions used by WriteXmlTable()
 static inline void WriteTableHeader(int puzzleNumber, int clueNum, _Bool isAnswer, FILE* file);
 static inline void WriteTableCell(int cellIdx, int cellNum, FILE* file);
-
-//functions used by WriteTableCell()
 static inline void WriteBorders(int cellIdx, FILE* file);
 
-void WriteDocumentXml(const PSUDOKUPUZZLE pPuzzles, int puzzleNum, FILE* file) {
+static inline void WriteDocumentXml(const PSUDOKUPUZZLE pPuzzles, int puzzleNum, FILE* file) {
 	fputws(xmlHeader, file);
 	for (int idx = 0; idx < puzzleNum; idx++) {
 		WriteXmlTable(&((pPuzzles + idx)->problem), (_Bool)0, idx + 1, file);

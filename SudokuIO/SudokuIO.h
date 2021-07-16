@@ -37,4 +37,4 @@ SUDOKUIO_API int ImportPuzzleFromJson(PSUDOKUPUZZLE puzzles, const char * filepa
 // 则可以继续导入，若个数小于IMPORTBUFFERLEN，则说明已经读取完成；若返回-1，说明无法打开文件
 
 
-SUDOKUIO_API void WriteDocumentXml(const PSUDOKUPUZZLE pPuzzles, int puzzleNum, FILE* file);
+SUDOKUIO_API UINT32 Crc32(FILE* file);

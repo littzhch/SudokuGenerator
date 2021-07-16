@@ -1,14 +1,10 @@
 #include "SudokuIO.h"
-#include "sudoku.h"
 #include "MultiThread.h"
 #include <Windows.h>
 
-int main(void) {
-	SUDOKUPUZZLE puzzles[5];
-	GenerateSudokuMT(puzzles, 5, 25, 30, 1, NULL);
+int main(int argc, char* argv[]) {
 	FILE* file;
-	fopen_s(&file, "document.xml", "w, ccs=UTF-8");
-	WriteDocumentXml(puzzles, 5, file);
-	fclose(file);
+	fopen_s(&file, argv[1], "rb");
+	printf("%08X", Crc32(file));
 	return 0;
 }
