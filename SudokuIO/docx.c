@@ -1,12 +1,108 @@
 #include <stdio.h>
+#include <io.h>
 #include "sudoku.h"
 #include "sudokuIO.h"
+#include "resource.h"
 
+extern char REPOPATH[];
 static inline void WriteDocumentXml(const PSUDOKUPUZZLE pPuzzles, int puzzleNum, FILE* file);
+static inline UINT32 Crc32(FILE* file);
+static inline void WriteTemplate(int id, FILE* file);
 
+int ExportRepoAsDocx(const char* filepath) {
+    FILE* repo, *target, *temp;
+    if (fopen_s(&repo, REPOPATH, "rb")) {
+        return -1;
+    }
+    int num;
+    fread(&num, sizeof(int), 1, repo);
+    if (!num) {
+        fclose(repo);
+        return -3;
+    }
+    if (fopen_s(&target, filepath, "wb")) {
+        fclose(repo);
+        return -2;
+    }
+    char tempFilePath[MAX_PATH];
+    GetTempPathA(MAX_PATH, tempFilePath);
+    strcat_s(tempFilePath, MAX_PATH, "sudoku_generator_document_xml_temp_file");
+    if (fopen_s(&temp, tempFilePath, "w,ccs=UTF-8")) {
+        fclose(repo);
+        fclose(target);
+        return -4;
+    }
 
+    PSUDOKUPUZZLE puzzles = (PSUDOKUPUZZLE)malloc(num * sizeof(SUDOKUPUZZLE));
+    fread(puzzles, sizeof(SUDOKUPUZZLE), num, repo);
+    WriteDocumentXml(puzzles, num, temp);
+    freopen_s(&temp, tempFilePath, "rb", temp);
+    UINT32 crc = Crc32(temp);
+    UINT32 size = _filelength(_fileno(temp));
+    UINT32 uint32 = 17;
+    char* name = "word/document.xml";
+    char buffer;
+    WriteTemplate(IDR_ZIP1, target);
+    fwrite(&crc, 4, 1, target);
+    fwrite(&size, 4, 1, target);
+    fwrite(&size, 4, 1, target);
+    fwrite(&uint32, 4, 1, target);
+    fwrite(name, uint32, 1, target);
+    rewind(temp);
+    for (UINT32 i = 0; i < size; i++) {
+        fread(&buffer, 1, 1, temp);
+        fwrite(&buffer, 1, 1, target);
+    }
+    WriteTemplate(IDR_ZIP2, target);
+    fwrite(&crc, 4, 1, target);
+    fwrite(&size, 4, 1, target);
+    fwrite(&size, 4, 1, target);
+    WriteTemplate(IDR_ZIP3, target);
+    uint32 = size + 895;
+    fwrite(&uint32, 4, 1, target);
+    WriteTemplate(IDR_ZIP4, target);
+    uint32 = size + 1549;
+    fwrite(&uint32, 4, 1, target);
+    WriteTemplate(IDR_ZIP5, target);
+    uint32 = size + 2822;
+    fwrite(&uint32, 4, 1, target);
+    WriteTemplate(IDR_ZIP6, target);
+    uint32 = size + 5827;
+    fwrite(&uint32, 4, 1, target);
+    WriteTemplate(IDR_ZIP7, target);
+    uint32 = size + 7569;
+    fwrite(&uint32, 4, 1, target);
+    WriteTemplate(IDR_ZIP8, target);
+    uint32 = size + 7927;
+    fwrite(&uint32, 4, 1, target);
+    WriteTemplate(IDR_ZIP9, target);
+    uint32 = size + 8222;
+    fwrite(&uint32, 4, 1, target);
+    WriteTemplate(IDR_ZIP10, target);
+    uint32 = size + 8608;
+    fwrite(&uint32, 4, 1, target);
+    WriteTemplate(IDR_ZIP11, target);
+    uint32 = size + 8882;
+    fwrite(&uint32, 4, 1, target);
+    buffer = 0;
+    fwrite(&buffer, 1, 1, target);
+    fwrite(&buffer, 1, 1, target);
 
-UINT32 Crc32(FILE* file) {
+    fclose(repo);
+    fclose(temp);
+    fclose(target);
+    free(puzzles);
+    return 0;
+}
+
+static inline void WriteTemplate(int id, FILE* file) {
+    HRSRC hRsrc = FindResourceA(GetModuleHandleA("SudokuIO.dll"), MAKEINTRESOURCEA(id), "ZIP");
+    void* sourcePtr = LockResource(LoadResource(GetModuleHandleA("SudokuIO.dll"), hRsrc));
+    DWORD resourceSize = SizeofResource(GetModuleHandleA("SudokuIO.dll"), hRsrc);
+    fwrite(sourcePtr, resourceSize, 1, file);
+}
+
+static inline UINT32 Crc32(FILE* file) {
     UINT32 crc = 0xffffffff;
     UINT32 poly = 0x04c11db7;
     UINT32 buffer1;
@@ -121,9 +217,6 @@ w:hAnsi=\"Cambria\"/><w:sz w:val=\"36\"/><w:szCs w:val=\"40\"/></w:rPr>\
 static inline void WriteXmlTable(const PSUDOKU pSudoku, _Bool isAnswer, int puzzleNumber, FILE* file);
 static inline void AddPageBreak(FILE* file);
 static inline void AddSpace(FILE* file);
-static inline void WriteTableHeader(int puzzleNumber, int clueNum, _Bool isAnswer, FILE* file);
-static inline void WriteTableCell(int cellIdx, int cellNum, FILE* file);
-static inline void WriteBorders(int cellIdx, FILE* file);
 
 static inline void WriteDocumentXml(const PSUDOKUPUZZLE pPuzzles, int puzzleNum, FILE* file) {
 	fputws(xmlHeader, file);
@@ -155,6 +248,10 @@ static inline void WriteDocumentXml(const PSUDOKUPUZZLE pPuzzles, int puzzleNum,
 	fputws(xmlEnd, file);
 }
 
+
+static inline void WriteTableHeader(int puzzleNumber, int clueNum, _Bool isAnswer, FILE* file);
+static inline void WriteTableCell(int cellIdx, int cellNum, FILE* file);
+
 static inline void WriteXmlTable(const PSUDOKU pSudoku, _Bool isAnswer, int puzzleNumber, FILE* file) {
 	WriteTableHeader(puzzleNumber, pSudoku->filledNum, isAnswer, file);
 	for (int idx = 0; idx < 81; idx++) {
@@ -181,6 +278,8 @@ static inline void WriteTableHeader(int puzzleNumber, int clueNum, _Bool isAnswe
     }
 }
 
+
+static inline void WriteBorders(int cellIdx, FILE* file);
 
 static inline void WriteTableCell(int cellIdx, int cellNum, FILE* file) {
     static wchar_t cellNumStr[10] = L"1";

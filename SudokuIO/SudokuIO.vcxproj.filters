@@ -29,7 +29,7 @@
     <ClCompile Include="json.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="docxWritexml.c">
+    <ClCompile Include="docx.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -37,5 +37,18 @@
     <ResourceCompile Include="SudokuIO.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="zip_template\zip_template_2" />
+    <None Include="zip_template\zip_template_1" />
+    <None Include="zip_template\zip_template_3" />
+    <None Include="zip_template\zip_template_4" />
+    <None Include="zip_template\zip_template_5" />
+    <None Include="zip_template\zip_template_6" />
+    <None Include="zip_template\zip_template_7" />
+    <None Include="zip_template\zip_template_8" />
+    <None Include="zip_template\zip_template_9" />
+    <None Include="zip_template\zip_template_10" />
+    <None Include="zip_template\zip_template_11" />
   </ItemGroup>
 </Project>

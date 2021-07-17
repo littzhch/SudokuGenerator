@@ -37,4 +37,7 @@ SUDOKUIO_API int ImportPuzzleFromJson(PSUDOKUPUZZLE puzzles, const char * filepa
 // 则可以继续导入，若个数小于IMPORTBUFFERLEN，则说明已经读取完成；若返回-1，说明无法打开文件
 
 
-SUDOKUIO_API UINT32 Crc32(FILE* file);
+SUDOKUIO_API int ExportRepoAsDocx(const char* filepath);
+// 导出为docx格式。正常返回0
+// 若无法打开存储库，返回-1；若无法打开目标文件，返回-2；若存储库中数独数量为0，返回-3；
+// 若无法创建临时文件，返回-4

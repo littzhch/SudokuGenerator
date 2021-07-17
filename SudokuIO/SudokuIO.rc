@@ -83,6 +83,34 @@ BEGIN
     END
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// ZIP
+//
+
+IDR_ZIP2                ZIP                     "zip_template\\zip_template_2"
+
+IDR_ZIP1                ZIP                     "zip_template\\zip_template_1"
+
+IDR_ZIP3                ZIP                     "zip_template\\zip_template_3"
+
+IDR_ZIP4                ZIP                     "zip_template\\zip_template_4"
+
+IDR_ZIP5                ZIP                     "zip_template\\zip_template_5"
+
+IDR_ZIP6                ZIP                     "zip_template\\zip_template_6"
+
+IDR_ZIP7                ZIP                     "zip_template\\zip_template_7"
+
+IDR_ZIP8                ZIP                     "zip_template\\zip_template_8"
+
+IDR_ZIP9                ZIP                     "zip_template\\zip_template_9"
+
+IDR_ZIP10               ZIP                     "zip_template\\zip_template_10"
+
+IDR_ZIP11               ZIP                     "zip_template\\zip_template_11"
+
 #endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
 

@@ -153,7 +153,7 @@
     <ClInclude Include="SudokuIO.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="docxWritexml.c" />
+    <ClCompile Include="docx.c" />
     <ClCompile Include="json.c" />
     <ClCompile Include="sudokurepo.c" />
   </ItemGroup>
@@ -164,6 +164,19 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SudokuIO.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="zip_template\zip_template_1" />
+    <None Include="zip_template\zip_template_10" />
+    <None Include="zip_template\zip_template_11" />
+    <None Include="zip_template\zip_template_2" />
+    <None Include="zip_template\zip_template_3" />
+    <None Include="zip_template\zip_template_4" />
+    <None Include="zip_template\zip_template_5" />
+    <None Include="zip_template\zip_template_6" />
+    <None Include="zip_template\zip_template_7" />
+    <None Include="zip_template\zip_template_8" />
+    <None Include="zip_template\zip_template_9" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

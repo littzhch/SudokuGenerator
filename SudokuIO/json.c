@@ -15,10 +15,8 @@ extern char REPOPATH[];
 int ExportRepoAsJson(const char* filepath) {
 	FILE* repo;
 	FILE* target;
-	int code;
 
-	code = fopen_s(&repo, REPOPATH, "rb");
-	if (code) {
+	if (fopen_s(&repo, REPOPATH, "rb")) {
 		return -1;
 	}
 	int num;
@@ -27,8 +25,7 @@ int ExportRepoAsJson(const char* filepath) {
 		fclose(repo);
 		return -3;
 	}
-	code = fopen_s(&target, filepath, "w");
-	if (code) {
+	if (fopen_s(&target, filepath, "w")) {
 		fclose(repo);
 		return -2;
 	}
