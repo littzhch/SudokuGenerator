@@ -25,7 +25,7 @@ int ExportRepoAsDocx(const char* filepath) {
         return -2;
     }
     char tempFilePath[MAX_PATH];
-    GetTempPathA(MAX_PATH, tempFilePath);
+    GetTempPathA(MAX_PATH, tempFilePath); //TODO: 获取唯一临时文件名
     strcat_s(tempFilePath, MAX_PATH, "sudoku_generator_document_xml_temp_file");
     if (fopen_s(&temp, tempFilePath, "w,ccs=UTF-8")) {
         fclose(repo);

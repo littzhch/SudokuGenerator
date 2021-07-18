@@ -11,8 +11,8 @@
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
-//TODO: 支持只输入一个提示数
-//TODO: 合并dropfile和菜单导入
+//TRY: 支持只输入一个提示数
+//TRY: 合并dropfile和菜单导入
 
 HINSTANCE hIns;
 HWND hWnd;

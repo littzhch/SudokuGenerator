@@ -5,8 +5,7 @@
 #include <time.h>
 #include "sudoku.h"
 #include "MultiThread.h"
-//TRY: 求解数独的多线程版本
-
+//TODO: 将multiThread合并入sudoku
 static PSUDOKUPUZZLE start;
 static int puzzlePtr;
 static int maxNum;

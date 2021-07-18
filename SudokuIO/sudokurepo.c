@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "SudokuIO.h"
 
-
+//TODO: 改名为fileio
 static inline int HaveRepository(void);
 char REPOPATH[MAX_PATH];
 
@@ -66,7 +66,6 @@ int GetPuzzleAmountInRepository(void) {
 	return result;
 }
 
-//TODO: 确定存储上限并加以限制，选择合适的数量类型
 int AddToRepository(const PSUDOKUPUZZLE puzzles, int amount) {  //TRY: 使用更高效的存储方式
 	FILE* file;
 	int code;

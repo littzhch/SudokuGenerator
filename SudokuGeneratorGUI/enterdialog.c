@@ -14,7 +14,7 @@ int DLG_GetSudokuProblem(PSUDOKUPUZZLE pPuzzle) {
 	return (int)DialogBoxA(hIns, MAKEINTRESOURCEA(IDD_DIALOG4), hWnd, (DLGPROC)enter);
 }
 
-static BOOL CALLBACK enter(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) { //TODO: 提供切换行的快速方式
+static BOOL CALLBACK enter(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) { //TRY: 提供切换行的快速方式
 	switch (message) {
 	case WM_INITDIALOG:
 		return TRUE;

@@ -191,8 +191,8 @@ static void UpdateNoAnswerAmount(int* count) {
 
 
 static inline char* W2A(wchar_t* source) {
-	static char result[256];
+	static char result[MAX_PATH];
 	size_t num;
-	wcstombs_s(&num, result, 256, source, 255);
+	wcstombs_s(&num, result, 256, source, MAX_PATH - 1);
 	return result;
 }
