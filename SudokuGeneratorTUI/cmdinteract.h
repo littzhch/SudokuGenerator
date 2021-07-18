@@ -40,7 +40,7 @@ void PrintHelp(void);
 // 错误和警告代号/程序退出返回值
 #define	ERR_ARG_MISMATCH    -2
 #define	ERR_ARG_WRONGFORMAT -1
-
+#define ERR_TEMP_CANTOPEN    1
 #define ERR_REPO_CANTOPEN    2
 #define ERR_REPO_EXIST       3
 #define ERR_REPO_EMPTY       4

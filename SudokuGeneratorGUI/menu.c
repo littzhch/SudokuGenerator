@@ -13,9 +13,15 @@ static void ExportThreadProc(void* arg);
 static inline char* W2A(wchar_t* source);
 static void UpdateNoAnswerAmount(int* count);
 
+struct TRDINFO {
+	int fType;
+	PWSTR path;
+};
+
 void ReactToMenuClick(int menuItem) {
 	struct gInfo info;
 	wchar_t* path;
+	struct TRDINFO trdInfo;
 
 	switch (menuItem) {
 
@@ -49,9 +55,10 @@ void ReactToMenuClick(int menuItem) {
 				MB_OK | MB_ICONINFORMATION);
 			break;
 		}
-		DLG_GetWriteFilePath(&path);
-		if (path) {
-			_beginthread(ExportThreadProc, 0, (void*)path);
+		int fileType = DLG_GetWriteFilePath(&path);
+		if (fileType) {
+			trdInfo = (struct TRDINFO){ fileType, path };
+			_beginthread(ExportThreadProc, 0, (void*)&trdInfo);
 			DLG_PopUpProgress(WNDTYPE_MARQUEE, L"正在导出...");
 		}
 		break;
@@ -112,8 +119,19 @@ int ImportAllFromFile(const char* filepath, int* noAnswerCount) {
 
 
 static void ExportThreadProc(void* arg) {
-	wchar_t* path = (wchar_t*)arg;
-	switch (ExportRepoAsJson(W2A(path))) {
+	struct TRDINFO* pInfo = (struct TRDINFO*)arg;
+	int result;
+	if (pInfo->fType == 2) {
+		result = ExportRepoAsJson(W2A(pInfo->path));
+	}
+	else if (pInfo->fType == 1) {
+		wcscat_s(pInfo->path, MAX_PATH, L".docx");
+		result = ExportRepoAsDocx(W2A(pInfo->path));
+	}
+	else {
+		result = 0;
+	}
+	switch (result) {
 	case 0:
 		DLG_StopProgress();
 		break;
@@ -124,6 +142,10 @@ static void ExportThreadProc(void* arg) {
 	case -2:
 		DLG_StopProgress();
 		MessageBoxA(hWnd, "无法打开目标文件", "错误", MB_OK | MB_ICONERROR);
+		break;
+	case -4:
+		DLG_StopProgress();
+		MessageBoxA(hWnd, "无法打开临时文件", "错误", MB_OK | MB_ICONERROR);
 		break;
 	}
 }

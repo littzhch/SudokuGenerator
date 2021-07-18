@@ -27,8 +27,11 @@ void DLG_UninitFileService(void);
 void DLG_GetOpenFilePath(PWSTR* path);
 // 获取需要打开的文件的路径，若用户关闭窗口，path为NULL
 
-void DLG_GetWriteFilePath(PWSTR* path);
-// 获取需要创建的文件的路径，若用户关闭窗口，path为NULL
+int DLG_GetWriteFilePath(PWSTR* path);
+// 获取需要创建的文件的完整路径（不带后缀名）和文件类型
+// 若为docx格式，返回1
+// 若为json格式，返回2
+// 若用户关闭窗口，path为NULL, 返回值为0
 
 
 /* generatedialog.c */

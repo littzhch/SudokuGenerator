@@ -78,16 +78,23 @@ static inline void CommandInit(_Bool silent) {
 }
 
 static inline void CommandExport(const char* filepath, _Bool silent) {
-	int code = ExportRepoAsJson(filepath);
+	int code;
+	size_t size = strlen(filepath);
+	if (strcmp(filepath + size - 5, ".docx")) {
+		code = ExportRepoAsJson(filepath);
+	}
+	else {
+		code = ExportRepoAsDocx(filepath);
+	}
 	switch (code) {
-	case 0:
-		return;
 	case -1:
 		ErrExit(ERR_REPO_CANTOPEN, NULL, "无法打开数独题目存储文件，可能不存在或被占用", silent);
 	case -2:
 		ErrExit(ERR_FILE_CANTOPEN, NULL, "无法打开目标文件，可能被占用", silent);
 	case -3:
 		ErrExit(ERR_REPO_EMPTY, NULL, "数独题目存储文件为空", silent);
+	case -4:
+		ErrExit(ERR_TEMP_CANTOPEN, NULL, "无法打开临时文件", silent);
 	}
 }
 
