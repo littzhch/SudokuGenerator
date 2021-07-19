@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "dialogs.h"
-#include "multithread.h"
+#include "sudoku.h"
 #include "resource.h"
 
 BOOL CALLBACK generate(HWND hDlg, UINT msgType, WPARAM wParam, LPARAM lParam);

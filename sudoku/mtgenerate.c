@@ -4,8 +4,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "sudoku.h"
-#include "MultiThread.h"
-//TODO: 将multiThread合并入sudoku
+
 static PSUDOKUPUZZLE start;
 static int puzzlePtr;
 static int maxNum;

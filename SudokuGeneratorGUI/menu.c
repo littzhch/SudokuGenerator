@@ -1,7 +1,7 @@
 #include "menu.h"
 #include "resource.h"
 #include "sudokuio.h"
-#include "multithread.h"
+#include "sudoku.h"
 
 extern HWND hWnd;
 extern HINSTANCE hIns;

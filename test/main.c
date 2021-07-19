@@ -1,6 +1,6 @@
-#include "SudokuIO.h"
-#include "MultiThread.h"
 #include <Windows.h>
+#include "SudokuIO.h"
+#include "sudoku.h"
 
 int main(int argc, char* argv[]) {
 	IOInit();

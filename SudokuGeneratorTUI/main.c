@@ -1,8 +1,8 @@
+#include <Windows.h>
 #include "cmdinteract.h"
 #include "SudokuIO.h"
 #include "sudoku.h"
-#include "MultiThread.h"
-#include <Windows.h>
+
 
 static inline void CommandClean(_Bool silent);
 static inline void CommandInit(_Bool silent);

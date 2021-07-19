@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="mtgenerate.c" />
     <ClCompile Include="sudoku.c" />
     <ClCompile Include="sudokugenerate.c" />
     <ClCompile Include="sudokusolve.c" />
