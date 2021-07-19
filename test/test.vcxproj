@@ -144,9 +144,6 @@
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MultiThread\MultiThread.vcxproj">
-      <Project>{78f71ff7-9e4b-4140-ba54-c75787ce6d42}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\SudokuIO\SudokuIO.vcxproj">
       <Project>{5f32d1e9-7e1d-4283-bc29-5218a78bbb1e}</Project>
     </ProjectReference>

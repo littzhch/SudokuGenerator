@@ -20,7 +20,7 @@ static char* usage =
 	"\t-file:   指定文件路径。当操作为solve或export时可用。若操作为solve，指定需要导入的数独题目所在文件；\n"
 	"\t         若操作为export，指定导出的文件路径和文件名\n"
 	"\t-silent: 不产生命令行输出，除help外任何操作可用\n\n"
-	"详细用法请访问 https://github.com/littzhch/SudokuGenerator\n";
+	"详细用法请访问 https://github.com/littzhch/SudokuGenerator/blob/master/SudokuGeneratorTUI/sdkg_tui.md\n";
 
 
 static inline char* GetSelfVersion(const char* selfpath);
@@ -60,7 +60,7 @@ static inline char* GetSelfVersion(const char* selfpath) {
 		}
 		free(pdata);
 	}
-	sprintf_s((char* const)result, 44, "%d.%d.%d.%d", version[1], version[0], version[3], version[2]); //字节序
+	sprintf_s((char* const)result, 44, "%u.%u.%u.%u", version[1], version[0], version[3], version[2]); //字节序
 	return (char*)result;
 }
 

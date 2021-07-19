@@ -37,6 +37,21 @@ void UpdateNumber(PSUDOKU pSudoku, UINT8 num, int index) {
 	pSudoku->elements[index] = num;
 }
 
+int UpdateNumberSafe(PSUDOKU pSudoku, UINT8 num, int index) {
+	UINT8 origin = pSudoku->elements[index];
+	UpdateNumber(pSudoku, 0, index);
+	if (num == 0) {
+		return 0;
+	}
+	UINT16 validNums = GetValidNumber(pSudoku, index);
+	if (IsValid(validNums, num)) {
+		UpdateNumber(pSudoku, num, index);
+		return 0;
+	}
+	UpdateNumber(pSudoku, origin, index);
+	return 1;
+}
+
 
 UINT16 GetValidNumber(PSUDOKU pSudoku, int index) {
 	int rowIdx = GetRow(index) - 1;

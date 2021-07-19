@@ -112,59 +112,43 @@ static void PrintNumbers(PSUDOKU pSudoku, FILE* file) {
 
 static int ReadSingleSudoku(PSUDOKUPUZZLE pPuzzle, FILE* file) {
 	char ch;
-	int status = 0;
+	int status = 0; // 0: 等待读入"["，1:等待读入数字，2: 等待读入","， 3: 等待读入"]"
 	int currentIdx = 0;
 	SuInitialize(&pPuzzle->problem);
-
 	EatBlank(file);
 	while ((ch = fgetc(file)) != EOF) {
-		switch (ch) {
-		case '[':
-			status = 1;
-			currentIdx = 0;
-			break;
-		case ']':
-			if (status == 2 && currentIdx == 81) {
-				if (pPuzzle->problem.filledNum != 81) {
-					pPuzzle->clueNum = pPuzzle->problem.filledNum;
-					return 0;
-				}
-			}
-			status = 0;
-			currentIdx = 0;
-			break;
-		case ',':
-			if (status == 2 && currentIdx != 81) {
+		switch (status) {
+		case 0:
+			if (ch == '[') {
 				status = 1;
 			}
-			else {
-				status = 0;
-				currentIdx = 0;
+			goto next;
+		case 1:
+			if (isdigit(ch)) {
+				if (UpdateNumberSafe(&pPuzzle->problem, ch - '0', currentIdx++)) {
+					break;
+				}
+				status = (currentIdx == 81) ? 3 : 2;
+				goto next;
 			}
 			break;
-		case '0':
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		case '8':
-		case '9':
-			if (status == 1) {
-				UpdateNumber(&pPuzzle->problem, ch - '0', currentIdx++);
-				status = 2;
-			}
-			else {
-				status = 0;
-				currentIdx = 0;
+		case 2:
+			if (ch == ',') {
+				status = 1;
+				goto next;
 			}
 			break;
-		default:
-			status = 0;
-			currentIdx = 0;
+		case 3:
+			if (ch == ']' && pPuzzle->problem.filledNum < 81) {
+				pPuzzle->clueNum = pPuzzle->problem.filledNum;
+				return 0;
+			}
+			break;
 		}
+		SuInitialize(&pPuzzle->problem);
+		status = 0;
+		currentIdx = 0;
+		next:
 		EatBlank(file);
 	}
 	return EOF;

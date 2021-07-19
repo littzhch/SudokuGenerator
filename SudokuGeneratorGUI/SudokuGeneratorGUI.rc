@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,0,0
- PRODUCTVERSION 0,1,0,0
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,12 +69,11 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "littzhch"
             VALUE "FileDescription", "SudokuGenerator GUI"
-            VALUE "FileVersion", "0.1.0.0"
+            VALUE "FileVersion", "1.0.0.0"
             VALUE "InternalName", "SudokuGenerator.exe"
-            VALUE "LegalCopyright", "Copyright (C) 2021"
             VALUE "OriginalFilename", "SudokuGenerator.exe"
             VALUE "ProductName", "SudokuGenerator"
-            VALUE "ProductVersion", "0.1.0.0"
+            VALUE "ProductVersion", "1.0.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -119,7 +118,7 @@ BEGIN
     ICON            "",IDC_PICT,85,14,20,20
     CTEXT           "Sudoku Generator",IDC_STATIC,43,40,109,8
     LTEXT           "作者      littzhch",IDC_STATIC,72,81,89,8
-    PUSHBUTTON      "报告bug",IDC_BUTTON_REPORT,74,115,50,14
+    PUSHBUTTON      "主页",IDC_BUTTON_REPORT,74,115,50,14
     CTEXT           "数独生成器",IDC_STATIC,53,53,87,8
     LTEXT           "版本",IDC_STATIC,72,67,31,8
     LTEXT           "0.0.0.0",IDC_TEXT,102,67,59,8

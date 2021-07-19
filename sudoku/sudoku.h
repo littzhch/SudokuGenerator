@@ -32,15 +32,23 @@ SUDOKU_API void SuInitialize(PSUDOKU pSudoku);
 // 初始化SUDOKU，使其成为一个空的数独盘
 
 SUDOKU_API void UpdateNumber(PSUDOKU pSudoku, UINT8 num, int index);
-// 向pSudoku中填入或移除数字，更改数独中的数字只能使用该函数
-// 只能填入满足数独要求的数字，不检查
+// 向pSudoku中填入或移除数字
+// 只应该填入满足数独条件的数字，不检查
 // num 为0~9，填入0代表移除数字
 // index为位置索引，0~80，也可用Position()宏从行数、列数中生成
+// num 和 index 的范围不检查
+
+SUDOKU_API int UpdateNumberSafe(PSUDOKU pSudoku, UINT8 num, int index);
+// 向pSudoku中填入或移除满足数独条件的数字
+// 若数字满足数独条件，返回0
+// 若数字不满足条件，不改变源数独，返回非零值
+// num 为0~9，填入0代表移除数字
+// index为位置索引，0~80，也可用Position()宏从行数、列数中生成
+// num 和 index 的范围不检查
 
 SUDOKU_API UINT16 GetValidNumber(PSUDOKU pSudoku, int index);
 // 获取index位置可填入的数字
 // 返回值需用IsValid()宏检验
-
 
 
 SUDOKU_API void GenerateSudoku(PSUDOKUPUZZLE pPuzzle);
