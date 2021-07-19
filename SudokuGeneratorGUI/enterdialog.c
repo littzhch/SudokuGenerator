@@ -3,7 +3,6 @@
 
 extern HINSTANCE hIns;
 extern HWND hWnd;
-
 static BOOL CALLBACK enter(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 static char lines[9][16];
@@ -40,7 +39,12 @@ static BOOL CALLBACK enter(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lPa
 						MessageBoxA(hwndDlg, "输入的数字过少", "错误", MB_ICONERROR | MB_OK);
 						return TRUE;
 					}
-					UpdateNumber(&puzzle->problem, (UINT8)(lines[line][c] - '0'), Position(line + 1, c + 1));
+					if (UpdateNumberSafe(&puzzle->problem, 
+						(UINT8)(lines[line][c] - '0'), 
+						Position(line + 1, c + 1))) {
+						MessageBoxA(hwndDlg, "输入不满足数独条件", "错误", MB_ICONERROR | MB_OK);
+						return TRUE;
+					}
 				}
 			}
 			puzzle->clueNum = puzzle->problem.filledNum;

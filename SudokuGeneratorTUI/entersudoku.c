@@ -6,6 +6,7 @@
 static inline int GetSingleSudoku(PSUDOKUPUZZLE puzzle);
 static inline int GetSingleLine(PSUDOKUPUZZLE puzzle, int line);
 static inline void Eatline(void);
+static inline void CleanNumbers(PSUDOKU pSudoku, int line);
 
 int GetPuzzleFromUser(PSUDOKUPUZZLE puzzles) {
 	printf("请按行输入数独，用0代表空格，数字间用空格隔开；最多可输入%d个数独\n", IMPORTBUFFERLEN);
@@ -27,14 +28,14 @@ static inline int GetSingleSudoku(PSUDOKUPUZZLE puzzle) {
 		}
 	}
 	puzzle->clueNum = puzzle->problem.filledNum;
-	puts("按q键退出，按其它任意键继续输入");
+	puts("按c键继续输入，按其它任意键退出");
 	while (1) {
 		if (_kbhit()) {
-			if (_getch() == 'q') {
-				return 1;
+			if (_getch() == 'c') {
+				return 0;
 			}
 			else {
-				return 0;
+				return 1;
 			}
 		}
 		Sleep(10);
@@ -47,22 +48,33 @@ static inline int GetSingleLine(PSUDOKUPUZZLE puzzle, int line) {
 	for (int idx = 1; idx <= 9; idx++) {
 		if (scanf_s("%lld", &number) != 1) {
 			puts("输入有误");
-			Eatline();
-			return 1;
+			goto error;
 		}
 		if (number < 0 || number > 9) {
 			printf("%lld超出范围\n", number);
-			Eatline();
-			return 1;
+			goto error;
 		}
-		UpdateNumber(&puzzle->problem, (UINT8) number, Position(line, idx));
+		if (UpdateNumberSafe(&puzzle->problem, (UINT8)number, Position(line, idx))) {
+			printf("%lld不满足数独条件\n", number);
+			goto error;
+		}
 	}
 	Eatline();
 	return 0;
+
+error:
+	Eatline();
+	CleanNumbers(&puzzle->problem, line);
+	return 1;
+
 }
 
-
 static inline void Eatline(void) {
-	while (getchar() != '\n')
-		;
+	while (getchar() != '\n');
+}
+
+static inline void CleanNumbers(PSUDOKU pSudoku, int line) {
+	for (int idx = 1; idx <= 9; idx++) {
+		UpdateNumber(pSudoku, 0, Position(line, idx));
+	}
 }

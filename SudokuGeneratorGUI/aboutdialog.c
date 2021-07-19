@@ -20,7 +20,7 @@ static BOOL CALLBACK about(HWND hDlg, UINT msgType, WPARAM wParam, LPARAM lParam
 	case WM_COMMAND:
 		if (LOWORD(wParam) == IDC_BUTTON_REPORT) {
 			ShellExecuteA(hDlg, "open", "explorer.exe", 
-				"https://github.com/littzhch/sudoku-generator", NULL, SW_SHOW);
+				"https://github.com/littzhch/SudokuGenerator", NULL, SW_SHOW);
 			return TRUE;
 		}
 		EndDialog(hDlg, 0);

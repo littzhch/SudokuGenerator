@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "SudokuIO.h"
 
-//TODO: ¸ÄÃûÎªfileio
 static inline int HaveRepository(void);
 char REPOPATH[MAX_PATH];
 

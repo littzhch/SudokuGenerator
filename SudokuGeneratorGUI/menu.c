@@ -69,7 +69,7 @@ void ReactToMenuClick(int menuItem) {
 			switch (SolveSudoku(&sp)) {
 			case 0:
 				AddToRepository(&sp, 1);
-				MessageBoxA(hWnd, "题目已加入存储库中", "求解完成", MB_OK);  //TODO: 使用更严格的数独正确性检查
+				MessageBoxA(hWnd, "题目已加入存储库中", "求解完成", MB_OK);
 				break;
 			case -1:
 				MessageBoxA(hWnd, "题目无解", "错误", MB_OK | MB_ICONERROR);

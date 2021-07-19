@@ -4,5 +4,5 @@
 
 int main(int argc, char* argv[]) {
 	IOInit();
-	printf("%d\n", ExportRepoAsDocx("test.docx"));
+	printf("%d\n", sizeof(SUDOKUPUZZLE));
 }
