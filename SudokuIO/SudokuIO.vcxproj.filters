@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="文档">
+      <UniqueIdentifier>{1ee5b3b4-6cfa-4c7d-bbea-6e29ed71a080}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -50,5 +53,8 @@
     <None Include="zip_template\zip_template_9" />
     <None Include="zip_template\zip_template_10" />
     <None Include="zip_template\zip_template_11" />
+    <None Include="input_file.md">
+      <Filter>文档</Filter>
+    </None>
   </ItemGroup>
 </Project>
