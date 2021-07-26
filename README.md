@@ -13,13 +13,13 @@
 ## 已知问题
 
 - 由于糟糕的算法设计，当需要生成的数独的提示数数量小于30时，生成时有概率卡住，卡住的概率与生成数独的数量成正相关，与提示数数量成负相关（如果卡住了，请使用任务管理器强制结束任务）
-- 由于作者偷懒没有对文件进行压缩，导出的docx文件的体积是正常情况下的五倍以上（用Word编辑保存一下可以变回正常大小）
+- 作者偷懒没有对文件进行压缩，导致导出的docx文件很大，你要忍一下（忍不了的话用Word编辑保存一下可以变回正常大小）
 - 没有做很多测试
 
 ## 文档
 
-[命令行程序的使用方法](https://github.com/littzhch/SudokuGenerator/blob/master/SudokuGeneratorTUI/sdkg_tui.md)
+[命令行程序的使用方法](./SudokuGeneratorTUI/sdkg_tui.md)
 
 图形程序没有文档（别问，问就是懒）
 
-[导入数独的文件格式](https://github.com/littzhch/SudokuGenerator/blob/master/SudokuIO/input_file.md)
+[数独导入文件格式说明](https://github.com/littzhch/SudokuGenerator/blob/master/SudokuIO/input_file.md)
