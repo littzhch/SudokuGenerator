@@ -22,4 +22,4 @@
 
 图形程序没有文档（别问，问就是懒）
 
-[数独导入文件格式说明](https://github.com/littzhch/SudokuGenerator/blob/master/SudokuIO/input_file.md)
+[数独导入文件格式说明](./SudokuIO/input_file.md)

@@ -4,7 +4,7 @@
 
 
 static inline void FillSquare(PSUDOKU pSudoku);						// 填充数独盘
-static inline void RemoveNumbers(PSUDOKU pSudoku, int clueNum);		// 打洞
+static inline int RemoveNumbers(PSUDOKU pSudoku, int clueNum);		// 打洞，若成功返回0，若死锁返回非零
 static int FillCell(PSUDOKU pSudoku, int idx);						// 在FillSquare()中被调用，递归函数
 static inline int HaveSingleAnswerAfterRemove(const PSUDOKU pSudoku, int removeIdx); // 在RemoveNumbers中被调用
 static int SolveCell(PSUDOKU pSudoku, int * zeroIdxs, 
@@ -12,9 +12,11 @@ static int SolveCell(PSUDOKU pSudoku, int * zeroIdxs,
 
 
 void GenerateSudoku(PSUDOKUPUZZLE pPuzzle) {   //TRY: 添加错误处理
-	FillSquare(&pPuzzle->problem);
-	pPuzzle->answer = pPuzzle->problem;
-	RemoveNumbers(&pPuzzle->problem, pPuzzle->clueNum);
+	FillSquare(&pPuzzle->answer);
+	do {
+		pPuzzle->problem = pPuzzle->answer;
+	} 
+	while (RemoveNumbers(&pPuzzle->problem, pPuzzle->clueNum));
 }
 
 
@@ -24,15 +26,16 @@ static inline void FillSquare(PSUDOKU pSudoku) {
 	FillCell(pSudoku, 0);
 }
 
-static void RemoveNumbers(PSUDOKU pSudoku, int clueNum) {
+static int RemoveNumbers(PSUDOKU pSudoku, int clueNum) {
 	int randIdx;
-	while (pSudoku->filledNum > clueNum) {
-		while (!pSudoku->elements[randIdx = RandNum(0, 80)])
-			;
+	int count = 200;
+	while (pSudoku->filledNum > clueNum && --count) {
+		while (!pSudoku->elements[randIdx = RandNum(0, 80)]);
 		if (HaveSingleAnswerAfterRemove(pSudoku, randIdx)) {
 			UpdateNumber(pSudoku, 0, randIdx);
 		}
 	}
+	return (!count);
 }
 
 static int FillCell(PSUDOKU pSudoku, int idx) {
