@@ -20,7 +20,7 @@ HWND hWnd;
 static HWND hPicture;
 static HWND hText;
 
-static inline void FillRects(RECT* result);
+static inline void InitMainWindowRect(RECT* result);
 static inline void SetupMainWindowContent(void);
 static inline void RegisterWindowClass(void);
 static inline void UpdateChildPos(void);
@@ -35,23 +35,23 @@ int WINAPI wWinMain(
 	PWSTR szCmdLine,
 	int iCmdShow) 
 {
-	RECT rect;
+	RECT mainWindRect;
 
 	hIns = hInstance;
 	DLG_InitFileService();
 	IOInit();
 	RegisterWindowClass();
-	FillRects(&rect);
+	InitMainWindowRect(&mainWindRect);
 
 	hWnd = CreateWindowExW(
 		WS_EX_ACCEPTFILES,
 		L"MainWindowClass",
 		L"SudokuGenerator 数独生成器",
 		WS_OVERLAPPEDWINDOW,
-		rect.left,
-		rect.top,
-		rect.right - rect.left,
-		rect.bottom - rect.top,
+		mainWindRect.left,
+		mainWindRect.top,
+		mainWindRect.right - mainWindRect.left,
+		mainWindRect.bottom - mainWindRect.top,
 		NULL,
 		LoadMenuW(hIns, MAKEINTRESOURCE(IDR_MENU1)),
 		hInstance,
@@ -121,7 +121,7 @@ static inline void RegisterWindowClass(void) {
 	RegisterClassW(&wc);
 }
 
-static inline void FillRects(RECT* result) {
+static inline void InitMainWindowRect(RECT* result) {
 	int screenx = GetSystemMetrics(SM_CXSCREEN);
 	int screeny = GetSystemMetrics(SM_CYSCREEN);
 	result->left = screenx / 4;
@@ -191,7 +191,6 @@ static void FileDropProc(void* arg) {
 
 	int amount = DragQueryFileA(hDrop, (UINT)0xFFFFFFFF, NULL, 0);
 	for (int idx = 0; idx < amount; idx++) {
-		strsize = (size_t)DragQueryFileA(hDrop, idx, NULL, 0);
 		DragQueryFileA(hDrop, idx, filepath, MAX_PATH);
 
 		swprintf_s(text, 40, L"正在读取...   文件 %d/%d", idx + 1, amount);

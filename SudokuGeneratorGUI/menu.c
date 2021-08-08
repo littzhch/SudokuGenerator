@@ -7,7 +7,6 @@ extern HWND hWnd;
 extern HINSTANCE hIns;
 
 static void GenerateThreadProc(void* arg);
-static void FileDropProc(void* arg);
 static void SolveProc(void* arg);
 static void ExportThreadProc(void* arg);
 static inline char* W2A(wchar_t* source);
@@ -24,7 +23,6 @@ void ReactToMenuClick(int menuItem) {
 	struct TRDINFO trdInfo;
 
 	switch (menuItem) {
-
 	case ID_MENU_ABOUT:
 		DLG_ShowAboutWindow();
 		break;
